@@ -8,7 +8,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 
-def replace_obj():
+def replace_obj(obj):
     static_obj = {}
     static_obj["Unequip a cursed item"] = [[]]
     static_obj["Talk to a hint NPC"] = [["whirlwind"], ["reveal"], ["pound", "lash", "scoop"], ["grind"]]
@@ -19,12 +19,12 @@ def replace_obj():
     static_obj["Fix a rusted weapon"] = [["rusty"]] #plz work
     static_obj["Forge with a Tear Stone"] = [["tear stone"]]
     static_obj["Forge with Dragon Skin"] = [["dragon skin"]]
-    static_obj["Forge with a Salamander Tail"] = [["tear stone"]]
-    static_obj["Forge with a Sylph Feather"] = [["tear stone"]]
-    static_obj["Forge with Orihalcon"] = [["tear stone"]]
-    static_obj["Forge with a Golem Core"] = [["tear stone"]]
-    static_obj["Forge with Mythril Silver"] = [["tear stone"]]
-    static_obj["Forge with Dark Matter"] = [["tear stone"]]
+    static_obj["Forge with a Salamander Tail"] = [["salamander tail"]]
+    static_obj["Forge with a Sylph Feather"] = [["sylph feather"]]
+    static_obj["Forge with Orihalcon"] = [["orihalcon"]]
+    static_obj["Forge with a Golem Core"] = [["golem core"]]
+    static_obj["Forge with Mythril Silver"] = [["mithril silver"]]
+    static_obj["Forge with Dark Matter"] = [["dark matter"]]
     static_obj["Obtain a Potion"] = [["potion"]] #might cause issues with mist potion
     static_obj["Obtain a Water of Life"] = [[]]
     static_obj["Obtain the Black Crystal"] = [["black crystal"]]
@@ -160,8 +160,9 @@ def replace_obj():
                                               ["mars_c", 3, "mercury", 3, "venus"]]
 
     plants_obj = {}
-    plants_obj["Defeat 3 Mad Plants"] = [["lash", "pound", "scoop", "forst", "reveal"], \
-                                         ["whirlwind"
+    plants_obj["Defeat 3 Mad Plants"] = [["cyclone", "lash", "pound", "scoop", "forst", "reveal"], \
+                                         ["cyclone", "whirlwind"], ["cyclone", "dancing idol"], \
+                                         ["cyclone", "grind"], ["cyclone", "grind", "shaman", "hover", "lift"]]
     
     count_obj = {}
     
@@ -169,13 +170,27 @@ def replace_obj():
     count_obj["Own 3 Vials"] =  [3, "vial"]
     count_obj["Own 2 shirts"] = [2, "shirt"] 
     count_obj["Own 2 rings"] = [2, "ring"]
-    count_obj["Own 8 stat-boosting items"] = 
-    count_obj["Obtain 2 prongs"] = 
-    count_obj["Obtain 2 trading sequence items"] = 
-    count_obj["Obtain 2 keys"] = 
+    count_obj["Own 8 stat-boosting items"] = [8, "stats"]
+    count_obj["Obtain 2 prongs"] = [2, "prong"]
+    count_obj["Obtain 2 trading sequence items"] = [2, "trade"]
+    count_obj["Obtain 2 keys"] = [2, "key"]
     count_obj["Own 2 Mist Potions"] = [2, "mist potion"]
 
-def credential(driver, url):
+    for i  in range(len(obj)):
+        for j  in range(len(obj[i])):
+            if obj[i][j] in static_obj.keys():
+                obj[i][j] = static_obj[obj[i][j]]
+            elif obj[i][j] in djinn_obj.keys():
+                obj[i][j] = ["djinn", djinn_obj[obj[i][j]]]
+            elif obj[i][j] in class_obj.keys():
+                obj[i][j] = ["class", class_obj[obj[i][j]]]
+            elif obj[i][j] in plants_obj.keys():
+                obj[i][j] = ["plant", plants_obj[obj[i][j]]]
+            elif obj[i][j] in count_obj.keys():
+                obj[i][j] = ["count", count_obj[obj[i][j]]]
+    return obj
+
+def credential(driver, url, password):
     #driver.set_window_position(2000, 100)
     #driver.maximize_window()
 
@@ -190,7 +205,7 @@ def credential(driver, url):
     for field in textfields:
         if not field.get_attribute("readonly"):
             field.send_keys("script")
-    passfield.send_keys("neo")
+    passfield.send_keys(password)
     specbox.click()
     join_button.click()
 
@@ -206,7 +221,6 @@ def credential(driver, url):
             counter = 0
             objectives.append([])
             index1 += 1
-        print(obj.text)
         objectives[index1].append(obj.text)
         counter += 1
     return objectives
@@ -217,31 +231,30 @@ def get_obj():
     print(datetime.now())
 
     url = simpledialog.askstring("Bingo", "url")
+    password = simpledialog.askstring("Bingo", "password")
     driver = webdriver.Chrome(ChromeDriverManager().install())
 
-    obj = credential(driver, url)
+    obj = credential(driver, url, password)
     print(obj)
-
-    time.sleep(5)
+    obj = replace_obj(obj)
 
     driver.close()
     driver.quit()
     
     return obj
 
+def get_obj_fast(url, password):
+    start_time = time.time()
+    print(datetime.now())
 
-start_time = time.time()
-print(datetime.now())
+    driver = webdriver.Chrome(ChromeDriverManager().install())
 
-url = "https://bingosync.karanum.xyz/room/_ehTIGtfQHK8zV6ybQqR5Q"#simpledialog.askstring("Bingo", "url")
-#print(url)
-driver = webdriver.Chrome(ChromeDriverManager().install())
+    obj = credential(driver, url, password)
+    print(obj)
+    obj = replace_obj(obj)
 
-obj = credential(driver, url)
-print(obj)
-
-time.sleep(5)
-
-driver.close()
-driver.quit()
+    driver.close()
+    driver.quit()
+    
+    return obj
 

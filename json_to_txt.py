@@ -1,4 +1,7 @@
 import json
+from bingo import get_obj_fast
+
+obj = get_obj_fast("https://bingosync.karanum.xyz/room/_ehTIGtfQHK8zV6ybQqR5Q", "neo")
 
 f = open('locations.json', 'r')
 data = json.load(f)
@@ -13,7 +16,8 @@ di = {}
 
 in_exceptions = {}
 in_exceptions["sand"] = ["Ninja Sandals"]
-
+found_piers = False
+found_reunion = False
 def clean_access(lst):
     lst2 = []
     for item in lst:
@@ -111,7 +115,7 @@ def removal():
             for i in v:
                 if ("hasDjinn" in i):
                     num = int(i.split("|")[1])
-                    if num <= djinncounter:
+                    if num <= djinn["total"]:
                         v.remove(i)
             t_v.append(v)
         di[k][1] = t_v
@@ -119,20 +123,30 @@ def removal():
 
 def sphere(sphere_counter, dd):
     print ("===== sphere ", sphere_counter)
-    global djinncounter
-    
+    global djinn
+    global found_piers
+    global found_reunion
+    global have_djinn
     removal()
 
     dic_sp = available_checks(di)
     sphere_dic = {}
     for k,v in dic_sp.items():
-        if v[0] == "Piers":
+        if v[0] == "Piers" and not found_piers:
+            found_piers = True
             #piers items
             have_items["0x105"] = loc_items["0x105"]
             have_items["0x106"] = loc_items["0x106"]
             have_items2[loc_items["0x105"]] = have_items2.get(loc_items["0x105"], 0) + 1
-            have_items2[loc_items["0x106"]] = have_items2.get(loc_items["0x106"], 0) + 1
+            have_items2[loc_items["0x106"]] = have_items2.get(loc_items["0x106"], 0) + 1 
+
+            have_classes.append(classes["Piers"])
+            have_djinn["000"] = loc_items["Shade"]
+            have_djinn["001"] = loc_items["Spring"]
+            add_djinn(loc_items["Shade"])
+            add_djinn(loc_items["Spring"])
             removal()
+        #TODO maybe add trial road and gabomba here
         if v[0] == 'Briggs Fight':
             have_items[k] = "briggs_battle"
             have_items2["briggs_battle"] = 1
@@ -153,7 +167,8 @@ def sphere(sphere_counter, dd):
             have_items[k] = "jupiter lit"
             have_items2["jupiter lit"] = 1
             removal()
-        if v[0] == 'Reunion':
+        if v[0] == 'Reunion' and not found_reunion:
+            found_reunion = True
             have_items[k] = "reunion"
             have_items2["reunion"] = 1
             #reunion items
@@ -165,7 +180,67 @@ def sphere(sphere_counter, dd):
             have_items2[loc_items["0x102"]] = have_items2.get(loc_items["0x102"], 0) + 1
             have_items2[loc_items["0x103"]] = have_items2.get(loc_items["0x103"], 0) + 1
             have_items2[loc_items["0x104"]] = have_items2.get(loc_items["0x104"], 0) + 1
+
+            have_classes.append(classes["Isaac"])
+            have_classes.append(classes["Garet"])
+            have_classes.append(classes["Mia"])
+            have_classes.append(classes["Ivan"])
+            
+            have_djinn["002"] = loc_items["Flint"]
+            have_djinn["003"] = loc_items["Granite"]
+            have_djinn["004"] = loc_items["Quartz"]
+            have_djinn["005"] = loc_items["Vine"]
+            have_djinn["006"] = loc_items["Sap"]
+            have_djinn["007"] = loc_items["Ground"]
+            add_djinn(loc_items["Flint"])
+            add_djinn(loc_items["Granite"])
+            add_djinn(loc_items["Quartz"])
+            add_djinn(loc_items["Vine"])
+            add_djinn(loc_items["Sap"])
+            add_djinn(loc_items["Ground"])
+
+            have_djinn["008"] = loc_items["Fizz"]
+            have_djinn["009"] = loc_items["Sleet"]
+            have_djinn["010"] = loc_items["Mist"]
+            have_djinn["011"] = loc_items["Spritz"]
+            have_djinn["012"] = loc_items["Hail"]
+            have_djinn["013"] = loc_items["Tonic"]
+            add_djinn(loc_items["Fizz"])
+            add_djinn(loc_items["Sleet"])
+            add_djinn(loc_items["Mist"])
+            add_djinn(loc_items["Spritz"])
+            add_djinn(loc_items["Hail"])
+            add_djinn(loc_items["Tonic"])
+
+            have_djinn["014"] = loc_items["Forge"]
+            have_djinn["015"] = loc_items["Fever"]
+            have_djinn["016"] = loc_items["Corona"]
+            have_djinn["017"] = loc_items["Scorch"]
+            have_djinn["018"] = loc_items["Ember"]
+            have_djinn["019"] = loc_items["Flash"]
+            add_djinn(loc_items["Forge"])
+            add_djinn(loc_items["Fever"])
+            add_djinn(loc_items["Corona"])
+            add_djinn(loc_items["Scorch"])
+            add_djinn(loc_items["Ember"])
+            add_djinn(loc_items["Flash"])
+            #skipping 20-21 cuz im lazy
+
+            have_djinn["022"] = loc_items["Gust"]
+            have_djinn["023"] = loc_items["Breeze"]
+            have_djinn["024"] = loc_items["Zephyr"]
+            have_djinn["025"] = loc_items["Smog"]
+            have_djinn["026"] = loc_items["Kite"]
+            have_djinn["027"] = loc_items["Squall"]
+            add_djinn(loc_items["Gust"])
+            add_djinn(loc_items["Breeze"])
+            add_djinn(loc_items["Zephyr"])
+            add_djinn(loc_items["Smog"])
+            add_djinn(loc_items["Kite"])
+            add_djinn(loc_items["Squall"])
+            
             removal()
+            
     dic_sp = available_checks(di)
     
     exclusive = []
@@ -183,24 +258,87 @@ def sphere(sphere_counter, dd):
             if sphere_dic[k][0] in ["Piers", 'Briggs Fight', 'Serpent Defeated', 'Dwarven Cannon',\
                                     'Briggs Jailbreak','Jupiter Lighthouse Lit', 'Reunion']:
                 continue
+            if sphere_dic[k][0] in ["gabomba_statue", "trial_road"]:
+                have_items[k] = sphere_dic[k][0]
+                continue
             have_djinn[k] = loc_items[sphere_dic[k][0]]
-            djinncounter += 1
+            add_djinn(loc_items[sphere_dic[k][0]])
 
-    for k,v in have_items.items():
-        have_items2[v] = have_items2.get(v, 0) + 1
-        
     for k in exclusive:
         try:
-            print(have_items[k])
+            ite = have_items[k]
+            if "coin" not in ite:
+                ite = ite.replace(" (empty)", "")
+                ite = ite.replace(" (Mimic)", "")
+                have_items2[ite] = have_items2.get(ite, 0) + 1
+                print(ite)
         except:
             continue
 
     #for k,v in have_djinn.items():
         #print(k,v)
         
-   # print(djinncounter)
     return dic_sp
 
+def check_obj(obj, have_items, sphere_counter):
+    for i in range(len(obj)):
+        for j in range(len(obj[i])):
+            #print(obj[i][j])
+            if type(obj[i][j]) == int:
+                continue
+            if len(obj[i][j]) == 0:
+                obj[i][j] = sphere_counter
+            elif obj[i][j][0] == "djinn":
+                if obj[i][j][1][0] == "count":
+                    if djinn[obj[i][j][1][2]] >= obj[i][j][1][1]:
+                        obj[i][j] = sphere_counter
+                elif obj[i][j][1][0] == "specific":
+                    for d in obj[i][j][1][1]:
+                        for dj in have_djinn.values():
+                            if d.lower() == dj.lower():
+                                obj[i][j] = sphere_counter
+            elif obj[i][j][0] == "class":
+                for option in obj[i][j][1]:
+                    if option[0] in have_classes and djinn[option[2]] >= option[1]:
+                        if len(option) < 4:
+                            obj[i][j] = sphere_counter
+                            break
+                        else:
+                            print(option)
+            elif obj[i][j][0] == "plant":
+                continue
+            elif obj[i][j][0] == "count":
+                continue
+            else:
+                for k in range(len(obj[i][j])):
+                    #print(obj[i][j][k])
+                    for l in obj[i][j][k]:
+                        if "hasDjinn" in l:
+                            if djinn["total"] >= int(l.split("|")[1]):
+                                obj[i][j][k].remove(l)
+                                continue
+                        for item in have_items.keys():
+                            if l.lower() in item.lower():
+                                obj[i][j][k].remove(l)
+                    if len(obj[i][j][k]) == 0:
+                        obj[i][j] = sphere_counter
+                        break
+    return obj
+
+def add_djinn(dji):
+    global djinn
+    
+    djinn["total"] += 1
+    if dji in d_venus:
+        djinn["venus"] += 1
+    elif dji in d_mars:
+        djinn["mars"] += 1
+    elif dji in d_mercury:
+        djinn["mercury"] += 1
+    elif dji in d_jupiter:
+        djinn["jupiter"] += 1
+    else:
+        print("WWWWWW ",dji)
 
 
 recurse(data[0], [])
@@ -215,12 +353,29 @@ for k in di.keys():
         v2 = [i for i in v2 if i != "$canAccessYampiBackside"]
         t_v.append(v2)
     di[k][1] = t_v
-
+di["0x000"] = ["gabomba_statue", [["lash", "pound", "scoop"]]]
+di["0x001"] = ["trial_road", [["$hasDjinn|28", "shaman"]]]
 
 log1 = spoiler_log.split('========== Djinn ==========')[1]
 log2 = log1.split('========== Character Stats ==========')
 log_djinn = log2[0]
+log3 = log1.split('========== Character Elements ==========')
+log_class = log3[1].split('========== Class Stats ==========')[0]
 log_items = log2[1].split('========== All Items ==========')[1]
+
+classes = {}
+c_ref = ["a", "venus_c", "mercury_c", "mars_c", "jupiter_c"]
+for line in log_class.split('\n'):
+    if not line:
+        continue
+    if line[0].isspace():
+        continue
+    l = line.split("  ")
+    if '' in l:
+        l.remove('')
+    classes[l[0]] = c_ref[l.index(' X')]
+
+have_classes = [classes["Felix"], classes["Jenna"], classes["Sheba"]]
 
 loc_items = {}
 loc_djinn = {}
@@ -253,7 +408,18 @@ for line in log_djinn.split('\n'):
     iss = line.split(" --> ")[1]
     loc_items[was]=iss
 
-djinncounter = 0
+djinn = {}
+djinn["total"] = 0
+djinn["mars"] = 0
+djinn["venus"] = 0
+djinn["mercury"] = 0
+djinn["jupiter"] = 0
+#god forgive me for my sins
+d_venus = "FlintGraniteQuartzVineSapGroundBaneEchoIronSteelMudFlowerMeldPetraSaltGeodeMoldCrystal"
+d_mars = "ForgeFeverCoronaScorchEmberFlashTorchCannonSparkKindleCharCoalRefluxCoreTinderShineFuryFugue"
+d_mercury = "FizzSleetMistSpritzHailTonicDewFogSourSpringShadeChillSteamRimeGelEddyBalmSerac"
+d_jupiter = "GustBreezeZephyrSmogKiteSquallLuffBreathBlitzEtherWaftHazeWheezeAromaWhorlGaspLullGale"
+
 print ("===== sphere ", sphere_counter)
 sphere_counter +=1
 
@@ -277,13 +443,21 @@ for k in dic.keys():
         have_items[k] = loc_items[k]
     except:
         have_djinn[k] = loc_items[dic[k][0]]
-        djinncounter += 1
+        add_djinn(loc_items[dic[k][0]])
 
 for k,v in have_items.items():
-    print(v)
-    have_items2[v] = have_items2.get(v, 0) + 1
+    if "coin" not in v:
+        ite = v.replace(" (empty)", "")
+        ite = v.replace(" (mimic)", "")
+        have_items2[ite] = have_items2.get(ite, 0) + 1
+        print(v)
 
 
+obj = check_obj(obj, have_items2, sphere_counter-1)           
+print(obj)
+for k,v in djinn.items():
+    print(k,v)
+    
 ds = dic
 same = False
 while not same:
@@ -293,10 +467,14 @@ while not same:
     else:
         sphere_counter +=1
         ds = ds1
+        obj = check_obj(obj, have_items2, sphere_counter-1)
+        print(obj)
+    for k,v in djinn.items():
+        print(k,v)
 
-    
+print("=====DONE======")
 
+for k,v in have_items2.items():
+    print(k,v)  
 
-
-
-
+print(have_classes)
