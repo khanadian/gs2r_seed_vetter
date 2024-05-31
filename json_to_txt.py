@@ -1,7 +1,7 @@
 import json
 from bingo import get_obj_fast
 
-obj = get_obj_fast("https://bingosync.karanum.xyz/room/_ehTIGtfQHK8zV6ybQqR5Q", "neo")
+obj = get_obj_fast("https://bingosync.karanum.xyz/room/Kudna_qtTniLTXqBNSb9Gw", "test")
 
 f = open('locations.json', 'r')
 data = json.load(f)
@@ -258,7 +258,8 @@ def sphere(sphere_counter, dd):
             if sphere_dic[k][0] in ["Piers", 'Briggs Fight', 'Serpent Defeated', 'Dwarven Cannon',\
                                     'Briggs Jailbreak','Jupiter Lighthouse Lit', 'Reunion']:
                 continue
-            if sphere_dic[k][0] in ["gabomba_statue", "trial_road"]:
+            if sphere_dic[k][0] in ["gabomba_statue", "trial_road", "Mad Plant", "Apple", "Cookie",\
+                                    "Hard Nut", "Lucky Pepper", "Mint", "Power Bread"]:
                 have_items[k] = sphere_dic[k][0]
                 continue
             have_djinn[k] = loc_items[sphere_dic[k][0]]
@@ -281,6 +282,7 @@ def sphere(sphere_counter, dd):
     return dic_sp
 
 def check_obj(obj, have_items, sphere_counter):
+    done_obj = []
     for i in range(len(obj)):
         for j in range(len(obj[i])):
             #print(obj[i][j])
@@ -291,24 +293,76 @@ def check_obj(obj, have_items, sphere_counter):
             elif obj[i][j][0] == "djinn":
                 if obj[i][j][1][0] == "count":
                     if djinn[obj[i][j][1][2]] >= obj[i][j][1][1]:
+                        done_obj.append(obj[i][j])
                         obj[i][j] = sphere_counter
                 elif obj[i][j][1][0] == "specific":
                     for d in obj[i][j][1][1]:
                         for dj in have_djinn.values():
                             if d.lower() == dj.lower():
+                                done_obj.append(obj[i][j])
                                 obj[i][j] = sphere_counter
             elif obj[i][j][0] == "class":
                 for option in obj[i][j][1]:
                     if option[0] in have_classes and djinn[option[2]] >= option[1]:
                         if len(option) < 4:
+                            done_obj.append(obj[i][j])
                             obj[i][j] = sphere_counter
                             break
-                        else:
-                            print(option)
-            elif obj[i][j][0] == "plant":
-                continue
+                        elif djinn[option[4]] >= option[3]:
+                            done_obj.append(obj[i][j])
+                            obj[i][j] = sphere_counter
+                            break
             elif obj[i][j][0] == "count":
-                continue
+                if obj[i][j][1][1] in have_items2.keys():
+                    
+                    if obj[i][j][1][0] < have_items2[obj[i][j][1][1]]:
+                        done_obj.append(obj[i][j])
+                        obj[i][j] = sphere_counter
+                else:
+                    count = 0
+                    if obj[i][j][1][1] == "shirt":
+                        for item in have_items2.keys():
+                            if "shirt" in item.lower() or item == "Divine Camisole":
+                                count += 1
+                        if count >= 2:
+                            done_obj.append(obj[i][j])
+                            obj[i][j] = sphere_counter
+                    elif obj[i][j][1][1] == "ring":
+                        for item in have_items2.keys:
+                            if "ring" in item.lower():
+                                count += 1
+                        if count >= 2:
+                            done_obj.append(obj[i][j])
+                            obj[i][j] = sphere_counter
+                    elif obj[i][j][1][1] == "stats":
+                        count = have_items2.get("Apple", 0) + have_items2.get("Cookie", 0) +\
+                                have_items2.get("Hard Nut", 0) + have_items2.get("Lucky Pepper", 0) +\
+                                have_items2.get("Mint", 0) + have_items2.get("Power Bread", 0)
+                        if count >= 5: #5 cuz -3 from statics off the bat
+                            done_obj.append(obj[i][j])
+                            obj[i][j] = sphere_counter
+                    elif obj[i][j][1][1] == "prong":
+                        for item in have_items2.keys():
+                            if "prong" in item.lower():
+                                count += 1
+                        if count >= 2:
+                            done_obj.append(obj[i][j])
+                            obj[i][j] = sphere_counter
+                    elif obj[i][j][1][1] == "trade":
+                        trad = ["Lil Turtle", "Pretty Stone", "Red Cloth", "Milk"]
+                        count = sum(t in trad for t in have_items2.keys())
+                        if count >= 2:
+                            done_obj.append(obj[i][j])
+                            obj[i][j] = sphere_counter
+                    elif obj[i][j][1][1] == "key":
+                        for item in have_items2.keys():
+                            if "key" in item.lower():
+                                count += 1
+                        if count >= 2:
+                            done_obj.append(obj[i][j])
+                            obj[i][j] = sphere_counter
+
+                        
             else:
                 for k in range(len(obj[i][j])):
                     #print(obj[i][j][k])
@@ -321,8 +375,12 @@ def check_obj(obj, have_items, sphere_counter):
                             if l.lower() in item.lower():
                                 obj[i][j][k].remove(l)
                     if len(obj[i][j][k]) == 0:
+                        done_obj.append(obj[i][j])
                         obj[i][j] = sphere_counter
                         break
+
+    for done in done_obj:
+        print(done) #TODO replace with original bingo board
     return obj
 
 def add_djinn(dji):
@@ -355,6 +413,24 @@ for k in di.keys():
     di[k][1] = t_v
 di["0x000"] = ["gabomba_statue", [["lash", "pound", "scoop"]]]
 di["0x001"] = ["trial_road", [["$hasDjinn|28", "shaman"]]]
+di["0x002"] = ["Mad Plant", [["cyclone", "lash", "pound", "scoop", "forst", "reveal"]]]
+di["0x003"] = ["Mad Plant", [["cyclone", "whirlwind"]]]
+di["0x004"] = ["Mad Plant", [["cyclone", "dancing idol"]]]
+di["0x005"] = ["Mad Plant", [["cyclone", "grind"]]]
+di["0x006"] = ["Mad Plant", [["cyclone", "grind", "shaman", "hover", "lift"]]]
+di["0x007"] = ["Apple", [["grind", "catch"]]]
+di["0x008"] = ["Cookie", [["grind", "magma ball"]]]
+di["0x009"] = ["Hard Nut", [["grind", "growth", "cyclone"],["trident", "growth", "cyclone"]]]
+di["0x010"] = ["Lucky Pepper", [["cyclone", "grind", "shaman", "hover", "lift"]]]
+di["0x011"] = ["Lucky Pepper", [["$hasDjinn|28", "shaman"]]]
+di["0x012"] = ["Mint", [["lash", "pound", "scoop", "cyclone"]]]
+di["0x013"] = ["Mint", [["cyclone"]]]
+di["0x014"] = ["Mint", [["cyclone", "grind"]]]#2 in jupiter
+di["0x015"] = ["Mint", [["cyclone", "grind"]]]
+di["0x016"] = ["Power Bread", [["pound", "lash", "burst"]]]
+di["0x017"] = ["Power Bread", [["grind"]]]
+
+
 
 log1 = spoiler_log.split('========== Djinn ==========')[1]
 log2 = log1.split('========== Character Stats ==========')
@@ -371,9 +447,11 @@ for line in log_class.split('\n'):
     if line[0].isspace():
         continue
     l = line.split("  ")
+    for i in range(len(l)):
+        l[i]= l[i].strip()
     if '' in l:
         l.remove('')
-    classes[l[0]] = c_ref[l.index(' X')]
+    classes[l[0]] = c_ref[l.index('X')]
 
 have_classes = [classes["Felix"], classes["Jenna"], classes["Sheba"]]
 
@@ -468,13 +546,43 @@ while not same:
         sphere_counter +=1
         ds = ds1
         obj = check_obj(obj, have_items2, sphere_counter-1)
-        print(obj)
-    for k,v in djinn.items():
-        print(k,v)
+        #find a way to print new djinn
 
 print("=====DONE======")
 
-for k,v in have_items2.items():
-    print(k,v)  
 
-print(have_classes)
+for row in obj:
+    print(row)
+
+sols = []
+sols.append([max(obj[0]), "row 1"])
+sols.append([max(obj[1]), "row 2"])
+sols.append([max(obj[2]), "row 3"])
+sols.append([max(obj[3]), "row 4"])
+sols.append([max(obj[4]), "row 5"])
+
+sols.append([max([i[0] for i in obj]), "column 1"])
+sols.append([max([i[1] for i in obj]), "column 2"])
+sols.append([max([i[2] for i in obj]), "column 3"])
+sols.append([max([i[3] for i in obj]), "column 4"])
+sols.append([max([i[4] for i in obj]), "column 5"])
+
+
+temp = []
+for i in range(len(obj)):
+    temp.append(obj[i][i])
+sols.append([max(temp), "top-left diagonal"])
+
+temp = []
+for i in range(len(obj)):
+    temp.append(obj[i][4-i])
+sols.append([max(temp), "top-right diagonal"])
+
+sols = sorted(sols, key=lambda x: x[0])
+print("")
+for sol in sols:
+    print(sol)
+
+print("\n fastest bingo is " + sols[0][1] + " with sphere " + str(sols[0][0]))
+
+

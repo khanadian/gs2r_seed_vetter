@@ -23,7 +23,7 @@ def replace_obj(obj):
     static_obj["Forge with a Sylph Feather"] = [["sylph feather"]]
     static_obj["Forge with Orihalcon"] = [["orihalcon"]]
     static_obj["Forge with a Golem Core"] = [["golem core"]]
-    static_obj["Forge with Mythril Silver"] = [["mithril silver"]]
+    static_obj["Forge with Mythril Silver"] = [["mythril silver"]]
     static_obj["Forge with Dark Matter"] = [["dark matter"]]
     static_obj["Obtain a Potion"] = [["potion"]] #might cause issues with mist potion
     static_obj["Obtain a Water of Life"] = [[]]
@@ -117,8 +117,9 @@ def replace_obj(obj):
     static_obj["Enter the innermost room of Taopo Swamp"] = [["tremor", "douse", "frost", "whirlwind", "growth"]]
     static_obj["Enter Magma Rock's tablet room"] = [["whirlwind", "growth", "burst", "lift", "grind"]]
     static_obj["Clear Jupiter Lighthouse"] = [["blue key", "red key", "reveal", "pound", "hover", "cyclone", "grind"]]
-    static_obj["Own 2 boots"] = [["turtle boots"], ["golden boots"], ["ninja sandals"], ["knight's greave"],\
-                                  ["silver greave"], ["reveal"]]#only needs 1 cuz alhafra
+    static_obj["Own 2 boots"] = [[]] #alhafra + garoh shops. code below just in case
+    #[["turtle boots"], ["golden boots"], ["ninja sandals"], ["knight's greave"],\
+                                  #["silver greave"], ["reveal"]]
 
 
     djinn_obj = {}
@@ -132,10 +133,10 @@ def replace_obj(obj):
     djinn_obj["Befriend 7 Mars Djinn"] = ["count", 7, "mars"]
     djinn_obj["Befriend 7 Jupiter Djinn"] = ["count", 7, "jupiter"]
     djinn_obj["Befriend 7 Mercury Djinn"] = ["count", 7, "mercury"]
-    djinn_obj["Befriend Spritz, Flower, or Crystal"] = ["specific", ["spritz", "flower", "crystal"]]
-    djinn_obj["Befriend Granite, Flash, or Shade"] = ["specific", ["granite", "flash", "shade"]]
-    djinn_obj["Befriend Aroma, Ether, or Ember"] = ["specific", ["aroma", "ether", "ember"]]
-    djinn_obj["Befriend Zephyr, Coal, or Vine"] = ["specific", ["zephyr", "coal", "vine"]]
+    djinn_obj["Befriend Spritz, Flower or Crystal"] = ["specific", ["spritz", "flower", "crystal"]]
+    djinn_obj["Befriend Granite, Flash or Shade"] = ["specific", ["granite", "flash", "shade"]]
+    djinn_obj["Befriend Aroma, Ether or Ember"] = ["specific", ["aroma", "ether", "ember"]]
+    djinn_obj["Befriend Zephyr, Coal or Vine"] = ["specific", ["zephyr", "coal", "vine"]]
     djinn_obj["Befriend Ground or Petra"] = ["specific", ["ground", "petra"]]
     djinn_obj["Befriend Lull or Kite"] = ["specific", ["lull", "kite"]]
     djinn_obj["Befriend Dew or Balm"] = ["specific", ["dew", "balm"]]
@@ -159,22 +160,17 @@ def replace_obj(obj):
     class_obj["Have someone be a Dragoon"] = [["venus_c", 3, "mercury", 3, "mars"], \
                                               ["mars_c", 3, "mercury", 3, "venus"]]
 
-    plants_obj = {}
-    plants_obj["Defeat 3 Mad Plants"] = [["cyclone", "lash", "pound", "scoop", "forst", "reveal"], \
-                                         ["cyclone", "whirlwind"], ["cyclone", "dancing idol"], \
-                                         ["cyclone", "grind"], ["cyclone", "grind", "shaman", "hover", "lift"]]
-    
     count_obj = {}
-    
-    count_obj["Own 3 Lucky Medals"] = [3, "lucky medal"]
-    count_obj["Own 3 Vials"] =  [3, "vial"]
+    count_obj["Defeat 3 Mad Plants"] = [3, "Mad Plant"]
+    count_obj["Own 3 Lucky Medals"] = [3, "Lucky Medal"]
+    count_obj["Own 3 Vials"] =  [3, "Vial"]
     count_obj["Own 2 shirts"] = [2, "shirt"] 
     count_obj["Own 2 rings"] = [2, "ring"]
     count_obj["Own 8 stat-boosting items"] = [8, "stats"]
     count_obj["Obtain 2 prongs"] = [2, "prong"]
     count_obj["Obtain 2 trading sequence items"] = [2, "trade"]
     count_obj["Obtain 2 keys"] = [2, "key"]
-    count_obj["Own 2 Mist Potions"] = [2, "mist potion"]
+    count_obj["Own 2 Mist Potions"] = [2, "Mist Potion"]
 
     for i  in range(len(obj)):
         for j  in range(len(obj[i])):
@@ -184,8 +180,6 @@ def replace_obj(obj):
                 obj[i][j] = ["djinn", djinn_obj[obj[i][j]]]
             elif obj[i][j] in class_obj.keys():
                 obj[i][j] = ["class", class_obj[obj[i][j]]]
-            elif obj[i][j] in plants_obj.keys():
-                obj[i][j] = ["plant", plants_obj[obj[i][j]]]
             elif obj[i][j] in count_obj.keys():
                 obj[i][j] = ["count", count_obj[obj[i][j]]]
     return obj
