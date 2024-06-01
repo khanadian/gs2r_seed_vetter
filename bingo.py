@@ -43,7 +43,7 @@ def replace_obj(obj):
                                     ["dancing idol", "cyclone", "growth", "whirlwind", "hasDjinn|16"]]
     static_obj["Defeat Avimander"] = [["pound", "lash", "burst", "hasDjinn|20"]]
     static_obj["Defeat Poseidon"] = [["grind", "hasDjinn|24"]]
-    static_obj["Defeat the Flame Dragons"] = [["teleport", "blaze", "magma ball", "pound", "burst", "grind"]]
+    static_obj["Defeat the Flame Dragons"] = [["teleport", "blaze", "magma ball", "pound", "burst", "grind","hasDjinn|48"]]
     static_obj["Defeat Moapa and co."] = [["grind", "whirlwind", "shaman", "hasDjinn|28"]]
     static_obj["Collect the Tremor Bit chest"] = [["reveal"]]
     static_obj["Collect the Lemuria fountain item"] = [["grind"]]

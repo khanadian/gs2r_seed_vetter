@@ -1,7 +1,8 @@
 import json
 from bingo import get_obj_fast
+from bingo import get_obj
 
-obj = get_obj_fast("https://bingosync.karanum.xyz/room/Kudna_qtTniLTXqBNSb9Gw", "test")
+obj = get_obj()#_fast("https://bingosync.karanum.xyz/room/tO0kwSt8QVSkKiLGnhGFkw", "khan")
 
 f = open('locations.json', 'r')
 data = json.load(f)
@@ -259,7 +260,7 @@ def sphere(sphere_counter, dd):
                                     'Briggs Jailbreak','Jupiter Lighthouse Lit', 'Reunion']:
                 continue
             if sphere_dic[k][0] in ["gabomba_statue", "trial_road", "Mad Plant", "Apple", "Cookie",\
-                                    "Hard Nut", "Lucky Pepper", "Mint", "Power Bread"]:
+                                    "Hard Nut", "Lucky Pepper", "Mint", "Power Bread", "Lucky Medal"]:
                 have_items[k] = sphere_dic[k][0]
                 continue
             have_djinn[k] = loc_items[sphere_dic[k][0]]
@@ -328,7 +329,7 @@ def check_obj(obj, have_items, sphere_counter):
                             done_obj.append(obj[i][j])
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "ring":
-                        for item in have_items2.keys:
+                        for item in have_items2.keys():
                             if "ring" in item.lower():
                                 count += 1
                         if count >= 2:
@@ -407,18 +408,23 @@ for k in di.keys():
     atts = di[k]
     for v in atts[1]:
         v2 = v.split(',')
+        if "gabomba_statue" in v2:
+            v2.remove("gabomba_statue")
+            v2.append("lash")
+            v2.append("pound")
+            v2.append("scoop")
+            break
         v2 = [i for i in v2 if i != "lemurian_ship"]
         v2 = [i for i in v2 if i != "$canAccessYampiBackside"]
         t_v.append(v2)
     di[k][1] = t_v
-di["0x000"] = ["gabomba_statue", [["lash", "pound", "scoop"]]]
 di["0x001"] = ["trial_road", [["$hasDjinn|28", "shaman"]]]
 di["0x002"] = ["Mad Plant", [["cyclone", "lash", "pound", "scoop", "forst", "reveal"]]]
 di["0x003"] = ["Mad Plant", [["cyclone", "whirlwind"]]]
 di["0x004"] = ["Mad Plant", [["cyclone", "dancing idol"]]]
 di["0x005"] = ["Mad Plant", [["cyclone", "grind"]]]
 di["0x006"] = ["Mad Plant", [["cyclone", "grind", "shaman", "hover", "lift"]]]
-di["0x007"] = ["Apple", [["grind", "catch"]]]
+di["0x007"] = ["Apple", [["grind", "catch"]]] 
 di["0x008"] = ["Cookie", [["grind", "magma ball"]]]
 di["0x009"] = ["Hard Nut", [["grind", "growth", "cyclone"],["trident", "growth", "cyclone"]]]
 di["0x010"] = ["Lucky Pepper", [["cyclone", "grind", "shaman", "hover", "lift"]]]
@@ -429,6 +435,7 @@ di["0x014"] = ["Mint", [["cyclone", "grind"]]]#2 in jupiter
 di["0x015"] = ["Mint", [["cyclone", "grind"]]]
 di["0x016"] = ["Power Bread", [["pound", "lash", "burst"]]]
 di["0x017"] = ["Power Bread", [["grind"]]]
+di["0x018"] = ["Lucky Medal", [[]]]
 
 
 
@@ -520,6 +527,13 @@ for k in dic.keys():
     try:
         have_items[k] = loc_items[k]
     except:
+        if dic[k][0] in ["Piers", 'Briggs Fight', 'Serpent Defeated', 'Dwarven Cannon',\
+                                'Briggs Jailbreak','Jupiter Lighthouse Lit', 'Reunion']:
+            continue
+        if dic[k][0] in ["gabomba_statue", "trial_road", "Mad Plant", "Apple", "Cookie",\
+                                "Hard Nut", "Lucky Pepper", "Mint", "Power Bread", "Lucky Medal"]:
+            have_items[k] = dic[k][0]
+            continue
         have_djinn[k] = loc_items[dic[k][0]]
         add_djinn(loc_items[dic[k][0]])
 
@@ -546,6 +560,7 @@ while not same:
         sphere_counter +=1
         ds = ds1
         obj = check_obj(obj, have_items2, sphere_counter-1)
+        print(djinn["total"])
         #find a way to print new djinn
 
 print("=====DONE======")
