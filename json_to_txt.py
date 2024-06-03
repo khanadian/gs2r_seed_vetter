@@ -2,7 +2,7 @@ import json
 from bingo import get_obj_fast
 from bingo import get_obj
 
-obj = get_obj()#_fast("https://bingosync.karanum.xyz/room/tO0kwSt8QVSkKiLGnhGFkw", "khan")
+obj = get_obj_fast("https://bingosync.karanum.xyz/room/s-9cmekTQUm4EoMv6wnFpQ", "rust")
 
 f = open('locations.json', 'r')
 data = json.load(f)
@@ -86,6 +86,20 @@ def recurse(dic, access):
     for child in kids:
         recurse(child, clean_access(access))
 
+def get_djinn(dic):
+    global have_djinn
+    for k in dic.keys():
+        if int(k, 16) < 48 or int(k, 16) >= 128 or k in have_djinn.keys():
+            continue
+        v = dic[k]
+        if len(v[1]) == 0:
+            have_djinn[k] = loc_items[v[0]]
+            add_djinn(loc_items[v[0]])
+        for req in v[1]:
+            if len(req) == 0:
+                have_djinn[k] = loc_items[v[0]]
+                add_djinn(loc_items[v[0]])
+
 def available_checks(dic):
     checks = {}
     for k in dic.keys():
@@ -107,7 +121,11 @@ def removal():
             for item in have_items2.keys():
                 for i in v:
                     frst = i.replace("_", " ").split()[0]
-                    if frst.lower() in item.lower(): #TODO red cloth != red key, mars star != mars lit
+                    if frst.lower() in item.lower(): 
+                        if frst == "red" or frst == "mars":
+                            if i.replace("_", " ").lower() != item.lower():
+                                continue
+                        
                         if i not in in_exceptions or item not in in_exceptions[i]:
                             c = v.count(i)
                             for j in range(c):
@@ -121,6 +139,124 @@ def removal():
             t_v.append(v)
         di[k][1] = t_v
     
+def special(v):
+    global found_piers
+    global found_reunion
+    
+    if v[0] == "Piers" and not found_piers:
+        found_piers = True
+        #piers items
+        have_items["0x105"] = loc_items["0x105"]
+        have_items["0x106"] = loc_items["0x106"]
+        have_items2[loc_items["0x105"]] = have_items2.get(loc_items["0x105"], 0) + 1
+        have_items2[loc_items["0x106"]] = have_items2.get(loc_items["0x106"], 0) + 1 
+
+        have_classes.append(classes["Piers"])
+        have_djinn["000"] = loc_items["Shade"]
+        have_djinn["001"] = loc_items["Spring"]
+        add_djinn(loc_items["Shade"])
+        add_djinn(loc_items["Spring"])
+        removal()
+    #TODO maybe add trial road and gabomba here
+    if v[0] == 'Briggs Fight':
+        have_items[k] = "briggs_battle"
+        have_items2["briggs_battle"] = 1
+        removal()
+    if v[0] == 'Serpent Defeated':
+        have_items[k] = "susa"
+        have_items2["susa"] = 1
+        removal()
+    if v[0] == 'Dwarven Cannon':
+        have_items[k] = "cannon"
+        have_items2["cannon"] = 1
+        removal()
+    if v[0] == 'Briggs Jailbreak':
+        have_items[k] = "briggs_jailbreak"
+        have_items2["briggs_jailbreak"] = 1
+        removal()
+    if v[0] == 'Jupiter Lighthouse Lit':
+        have_items[k] = "jupiter lit"
+        have_items2["jupiter lit"] = 1
+        
+        removal()
+    if v[0] == "Lighthouse Heated":
+        have_items[k] = "mars_lit"
+        have_items2["mars_lit"] = 1
+        removal()
+    if v[0] == 'Reunion' and not found_reunion:
+        found_reunion = True
+        have_items[k] = "reunion"
+        have_items2["reunion"] = 1
+        #reunion items
+        have_items["0x101"] = loc_items["0x101"]
+        have_items["0x102"] = loc_items["0x102"]
+        have_items["0x103"] = loc_items["0x103"]
+        have_items["0x104"] = loc_items["0x104"]
+        have_items2[loc_items["0x101"]] = have_items2.get(loc_items["0x101"], 0) + 1
+        have_items2[loc_items["0x102"]] = have_items2.get(loc_items["0x102"], 0) + 1
+        have_items2[loc_items["0x103"]] = have_items2.get(loc_items["0x103"], 0) + 1
+        have_items2[loc_items["0x104"]] = have_items2.get(loc_items["0x104"], 0) + 1
+
+        have_classes.append(classes["Isaac"])
+        have_classes.append(classes["Garet"])
+        have_classes.append(classes["Mia"])
+        have_classes.append(classes["Ivan"])
+        
+        have_djinn["002"] = loc_items["Flint"]
+        have_djinn["003"] = loc_items["Granite"]
+        have_djinn["004"] = loc_items["Quartz"]
+        have_djinn["005"] = loc_items["Vine"]
+        have_djinn["006"] = loc_items["Sap"]
+        have_djinn["007"] = loc_items["Ground"]
+        add_djinn(loc_items["Flint"])
+        add_djinn(loc_items["Granite"])
+        add_djinn(loc_items["Quartz"])
+        add_djinn(loc_items["Vine"])
+        add_djinn(loc_items["Sap"])
+        add_djinn(loc_items["Ground"])
+        
+        have_djinn["008"] = loc_items["Fizz"]
+        have_djinn["009"] = loc_items["Sleet"]
+        have_djinn["010"] = loc_items["Mist"]
+        have_djinn["011"] = loc_items["Spritz"]
+        have_djinn["012"] = loc_items["Hail"]
+        have_djinn["013"] = loc_items["Tonic"]
+        add_djinn(loc_items["Fizz"])
+        add_djinn(loc_items["Sleet"])
+        add_djinn(loc_items["Mist"])
+        add_djinn(loc_items["Spritz"])
+        add_djinn(loc_items["Hail"])
+        add_djinn(loc_items["Tonic"])
+
+        have_djinn["014"] = loc_items["Forge"]
+        have_djinn["015"] = loc_items["Fever"]
+        have_djinn["016"] = loc_items["Corona"]
+        have_djinn["017"] = loc_items["Scorch"]
+        have_djinn["018"] = loc_items["Ember"]
+        have_djinn["019"] = loc_items["Flash"]
+        add_djinn(loc_items["Forge"])
+        add_djinn(loc_items["Fever"])
+        add_djinn(loc_items["Corona"])
+        add_djinn(loc_items["Scorch"])
+        add_djinn(loc_items["Ember"])
+        add_djinn(loc_items["Flash"])
+        #skipping 20-21 cuz im lazy
+
+        have_djinn["022"] = loc_items["Gust"]
+        have_djinn["023"] = loc_items["Breeze"]
+        have_djinn["024"] = loc_items["Zephyr"]
+        have_djinn["025"] = loc_items["Smog"]
+        have_djinn["026"] = loc_items["Kite"]
+        have_djinn["027"] = loc_items["Squall"]
+        add_djinn(loc_items["Gust"])
+        add_djinn(loc_items["Breeze"])
+        add_djinn(loc_items["Zephyr"])
+        add_djinn(loc_items["Smog"])
+        add_djinn(loc_items["Kite"])
+        add_djinn(loc_items["Squall"])
+        
+        removal()
+
 
 def sphere(sphere_counter, dd):
     print ("===== sphere ", sphere_counter)
@@ -128,143 +264,35 @@ def sphere(sphere_counter, dd):
     global found_piers
     global found_reunion
     global have_djinn
+    get_djinn(di)
     removal()
-
     dic_sp = available_checks(di)
     sphere_dic = {}
     for k,v in dic_sp.items():
-        if v[0] == "Piers" and not found_piers:
-            found_piers = True
-            #piers items
-            have_items["0x105"] = loc_items["0x105"]
-            have_items["0x106"] = loc_items["0x106"]
-            have_items2[loc_items["0x105"]] = have_items2.get(loc_items["0x105"], 0) + 1
-            have_items2[loc_items["0x106"]] = have_items2.get(loc_items["0x106"], 0) + 1 
-
-            have_classes.append(classes["Piers"])
-            have_djinn["000"] = loc_items["Shade"]
-            have_djinn["001"] = loc_items["Spring"]
-            add_djinn(loc_items["Shade"])
-            add_djinn(loc_items["Spring"])
-            removal()
-        #TODO maybe add trial road and gabomba here
-        if v[0] == 'Briggs Fight':
-            have_items[k] = "briggs_battle"
-            have_items2["briggs_battle"] = 1
-            removal()
-        if v[0] == 'Serpent Defeated':
-            have_items[k] = "susa"
-            have_items2["susa"] = 1
-            removal()
-        if v[0] == 'Dwarven Cannon':
-            have_items[k] = "cannon"
-            have_items2["cannon"] = 1
-            removal()
-        if v[0] == 'Briggs Jailbreak':
-            have_items[k] = "briggs_jailbreak"
-            have_items2["briggs_jailbreak"] = 1
-            removal()
-        if v[0] == 'Jupiter Lighthouse Lit':
-            have_items[k] = "jupiter lit"
-            have_items2["jupiter lit"] = 1
-            removal()
-        if v[0] == 'Reunion' and not found_reunion:
-            found_reunion = True
-            have_items[k] = "reunion"
-            have_items2["reunion"] = 1
-            #reunion items
-            have_items["0x101"] = loc_items["0x101"]
-            have_items["0x102"] = loc_items["0x102"]
-            have_items["0x103"] = loc_items["0x103"]
-            have_items["0x104"] = loc_items["0x104"]
-            have_items2[loc_items["0x101"]] = have_items2.get(loc_items["0x101"], 0) + 1
-            have_items2[loc_items["0x102"]] = have_items2.get(loc_items["0x102"], 0) + 1
-            have_items2[loc_items["0x103"]] = have_items2.get(loc_items["0x103"], 0) + 1
-            have_items2[loc_items["0x104"]] = have_items2.get(loc_items["0x104"], 0) + 1
-
-            have_classes.append(classes["Isaac"])
-            have_classes.append(classes["Garet"])
-            have_classes.append(classes["Mia"])
-            have_classes.append(classes["Ivan"])
-            
-            have_djinn["002"] = loc_items["Flint"]
-            have_djinn["003"] = loc_items["Granite"]
-            have_djinn["004"] = loc_items["Quartz"]
-            have_djinn["005"] = loc_items["Vine"]
-            have_djinn["006"] = loc_items["Sap"]
-            have_djinn["007"] = loc_items["Ground"]
-            add_djinn(loc_items["Flint"])
-            add_djinn(loc_items["Granite"])
-            add_djinn(loc_items["Quartz"])
-            add_djinn(loc_items["Vine"])
-            add_djinn(loc_items["Sap"])
-            add_djinn(loc_items["Ground"])
-
-            have_djinn["008"] = loc_items["Fizz"]
-            have_djinn["009"] = loc_items["Sleet"]
-            have_djinn["010"] = loc_items["Mist"]
-            have_djinn["011"] = loc_items["Spritz"]
-            have_djinn["012"] = loc_items["Hail"]
-            have_djinn["013"] = loc_items["Tonic"]
-            add_djinn(loc_items["Fizz"])
-            add_djinn(loc_items["Sleet"])
-            add_djinn(loc_items["Mist"])
-            add_djinn(loc_items["Spritz"])
-            add_djinn(loc_items["Hail"])
-            add_djinn(loc_items["Tonic"])
-
-            have_djinn["014"] = loc_items["Forge"]
-            have_djinn["015"] = loc_items["Fever"]
-            have_djinn["016"] = loc_items["Corona"]
-            have_djinn["017"] = loc_items["Scorch"]
-            have_djinn["018"] = loc_items["Ember"]
-            have_djinn["019"] = loc_items["Flash"]
-            add_djinn(loc_items["Forge"])
-            add_djinn(loc_items["Fever"])
-            add_djinn(loc_items["Corona"])
-            add_djinn(loc_items["Scorch"])
-            add_djinn(loc_items["Ember"])
-            add_djinn(loc_items["Flash"])
-            #skipping 20-21 cuz im lazy
-
-            have_djinn["022"] = loc_items["Gust"]
-            have_djinn["023"] = loc_items["Breeze"]
-            have_djinn["024"] = loc_items["Zephyr"]
-            have_djinn["025"] = loc_items["Smog"]
-            have_djinn["026"] = loc_items["Kite"]
-            have_djinn["027"] = loc_items["Squall"]
-            add_djinn(loc_items["Gust"])
-            add_djinn(loc_items["Breeze"])
-            add_djinn(loc_items["Zephyr"])
-            add_djinn(loc_items["Smog"])
-            add_djinn(loc_items["Kite"])
-            add_djinn(loc_items["Squall"])
-            
-            removal()
-            
+        temp = -1
+        while temp != len(have_items):
+            temp = len(have_items)
+            special(v)
     dic_sp = available_checks(di)
     
     exclusive = []
 
     for k in dic_sp.keys():
-        if k not in dd.keys():
+        if k not in dd.keys() and (int(k, 16) < 48 or int(k, 16) >= 128):
             exclusive.append(k)
             sphere_dic[k] = dic_sp[k]
 
     for k in sphere_dic.keys():
-        
         try:
             have_items[k] = loc_items[k]
         except:
             if sphere_dic[k][0] in ["Piers", 'Briggs Fight', 'Serpent Defeated', 'Dwarven Cannon',\
-                                    'Briggs Jailbreak','Jupiter Lighthouse Lit', 'Reunion']:
+                                    'Briggs Jailbreak','Jupiter Lighthouse Lit', 'Reunion', 'Lighthouse Heated']:
                 continue
             if sphere_dic[k][0] in ["gabomba_statue", "trial_road", "Mad Plant", "Apple", "Cookie",\
                                     "Hard Nut", "Lucky Pepper", "Mint", "Power Bread", "Lucky Medal"]:
                 have_items[k] = sphere_dic[k][0]
                 continue
-            have_djinn[k] = loc_items[sphere_dic[k][0]]
-            add_djinn(loc_items[sphere_dic[k][0]])
 
     for k in exclusive:
         try:
@@ -315,8 +343,7 @@ def check_obj(obj, have_items, sphere_counter):
                             break
             elif obj[i][j][0] == "count":
                 if obj[i][j][1][1] in have_items2.keys():
-                    
-                    if obj[i][j][1][0] < have_items2[obj[i][j][1][1]]:
+                    if obj[i][j][1][0] <= have_items2[obj[i][j][1][1]]:
                         done_obj.append(obj[i][j])
                         obj[i][j] = sphere_counter
                 else:
@@ -386,7 +413,11 @@ def check_obj(obj, have_items, sphere_counter):
 
 def add_djinn(dji):
     global djinn
-    
+    global have_djinn2
+    if dji in have_djinn2.keys():
+        print("AAAAA TOO MANY DJINN")
+        return
+    have_djinn2[dji] = 1
     djinn["total"] += 1
     if dji in d_venus:
         djinn["venus"] += 1
@@ -408,18 +439,24 @@ for k in di.keys():
     atts = di[k]
     for v in atts[1]:
         v2 = v.split(',')
+        v2 = [i for i in v2 if i != "lemurian_ship"]
+        v2 = [i for i in v2 if i != "$canAccessYampiBackside"]
         if "gabomba_statue" in v2:
-            v2.remove("gabomba_statue")
             v2.append("lash")
             v2.append("pound")
             v2.append("scoop")
-            break
-        v2 = [i for i in v2 if i != "lemurian_ship"]
-        v2 = [i for i in v2 if i != "$canAccessYampiBackside"]
+            v2.remove("gabomba_statue")
+        if "$canAccessUpperMars" in v2:
+            v2.append("burst")
+            v2.append("pound")
+            v2.append("blaze")
+            v2.append("reveal")
+            v2.append("teleport")
+            v2.remove("$canAccessUpperMars")
         t_v.append(v2)
     di[k][1] = t_v
 di["0x001"] = ["trial_road", [["$hasDjinn|28", "shaman"]]]
-di["0x002"] = ["Mad Plant", [["cyclone", "lash", "pound", "scoop", "forst", "reveal"]]]
+di["0x002"] = ["Mad Plant", [["cyclone", "lash", "pound", "scoop", "frost", "reveal"]]]
 di["0x003"] = ["Mad Plant", [["cyclone", "whirlwind"]]]
 di["0x004"] = ["Mad Plant", [["cyclone", "dancing idol"]]]
 di["0x005"] = ["Mad Plant", [["cyclone", "grind"]]]
@@ -436,8 +473,7 @@ di["0x015"] = ["Mint", [["cyclone", "grind"]]]
 di["0x016"] = ["Power Bread", [["pound", "lash", "burst"]]]
 di["0x017"] = ["Power Bread", [["grind"]]]
 di["0x018"] = ["Lucky Medal", [[]]]
-
-
+di["0x9f9"] = ["Magma Ball", [["grind","lift","burst","growth","lash","whirlwind","blaze"]]]
 
 log1 = spoiler_log.split('========== Djinn ==========')[1]
 log2 = log1.split('========== Character Stats ==========')
@@ -509,11 +545,14 @@ print ("===== sphere ", sphere_counter)
 sphere_counter +=1
 
 print("== available items ==")
+
+have_djinn = {}
+have_djinn2 = {}
+get_djinn(di)
 dic = available_checks(di)
 
 have_items = {}
 have_items2 = {}
-have_djinn = {}
 
 #idejima items
 have_items["0x1"] = loc_items["0x1"]
@@ -524,18 +563,18 @@ have_items["0x4"] = loc_items["0x4"]
 
 
 for k in dic.keys():
+    if int(k, 16) >= 48 and int(k, 16) < 128:
+            continue
     try:
         have_items[k] = loc_items[k]
     except:
         if dic[k][0] in ["Piers", 'Briggs Fight', 'Serpent Defeated', 'Dwarven Cannon',\
-                                'Briggs Jailbreak','Jupiter Lighthouse Lit', 'Reunion']:
+                                'Briggs Jailbreak','Jupiter Lighthouse Lit', 'Reunion', 'Lighthouse Heated']:
             continue
         if dic[k][0] in ["gabomba_statue", "trial_road", "Mad Plant", "Apple", "Cookie",\
                                 "Hard Nut", "Lucky Pepper", "Mint", "Power Bread", "Lucky Medal"]:
             have_items[k] = dic[k][0]
             continue
-        have_djinn[k] = loc_items[dic[k][0]]
-        add_djinn(loc_items[dic[k][0]])
 
 for k,v in have_items.items():
     if "coin" not in v:
@@ -547,11 +586,11 @@ for k,v in have_items.items():
 
 obj = check_obj(obj, have_items2, sphere_counter-1)           
 print(obj)
-for k,v in djinn.items():
-    print(k,v)
     
 ds = dic
 same = False
+print(have_djinn.values())
+djinn_old = list(have_djinn.values())
 while not same:
     ds1 = sphere(sphere_counter, ds)
     if ds1 == ds:
@@ -559,12 +598,22 @@ while not same:
     else:
         sphere_counter +=1
         ds = ds1
+        print("")
         obj = check_obj(obj, have_items2, sphere_counter-1)
+        print("")
+        for dj in have_djinn.values():
+            if dj not in djinn_old:
+                print(dj)
+        djinn_old = list(have_djinn.values())
         print(djinn["total"])
         #find a way to print new djinn
 
 print("=====DONE======")
+print(di)
 
+for (k,v) in have_djinn2.items():
+    if v > 1:
+        print(k, v)
 
 for row in obj:
     print(row)
