@@ -88,6 +88,8 @@ def recurse(dic, access):
 
 def get_djinn(dic):
     global have_djinn
+    global have_items2
+    poop = []
     for k in dic.keys():
         if int(k, 16) < 48 or int(k, 16) >= 128 or k in have_djinn.keys():
             continue
@@ -95,10 +97,16 @@ def get_djinn(dic):
         if len(v[1]) == 0:
             have_djinn[k] = loc_items[v[0]]
             add_djinn(loc_items[v[0]])
+            poop.append(k)
         for req in v[1]:
             if len(req) == 0:
                 have_djinn[k] = loc_items[v[0]]
                 add_djinn(loc_items[v[0]])
+                poop.append(k)
+                break
+    for pp in poop:
+        di.pop(pp)
+                
 
 def available_checks(dic):
     checks = {}
@@ -112,6 +120,7 @@ def available_checks(dic):
     return checks
 
 def removal():
+    global have_items2
     for k in di.keys():
         atts = di[k]
         t_v = []
@@ -123,7 +132,7 @@ def removal():
                     frst = i.replace("_", " ").split()[0]
                     if frst.lower() in item.lower(): 
                         if frst == "red" or frst == "mars":
-                            if i.replace("_", " ").lower() != item.lower():
+                            if i.replace("_", " ").lower() != item.replace("_", " ").lower():
                                 continue
                         
                         if i not in in_exceptions or item not in in_exceptions[i]:
@@ -139,10 +148,13 @@ def removal():
             t_v.append(v)
         di[k][1] = t_v
     
-def special(v):
-    global found_piers
-    global found_reunion
-    
+def special(v, k):
+    global found_piers # probably redundant now
+    global found_reunion #TODO remove
+    global have_items
+    global have_items2
+
+    exclusive = []
     if v[0] == "Piers" and not found_piers:
         found_piers = True
         #piers items
@@ -156,37 +168,66 @@ def special(v):
         have_djinn["001"] = loc_items["Spring"]
         add_djinn(loc_items["Shade"])
         add_djinn(loc_items["Spring"])
+        if k in di.keys():
+            exclusive.append("0x105")
+            exclusive.append("0x106")
+            exclusive.append(k)
+            di.pop(k)
         removal()
     #TODO maybe add trial road and gabomba here
     if v[0] == 'Briggs Fight':
         have_items[k] = "briggs_battle"
         have_items2["briggs_battle"] = 1
+        if k in di.keys():
+            exclusive.append(k)
+            di.pop(k)
         removal()
     if v[0] == 'Serpent Defeated':
         have_items[k] = "susa"
         have_items2["susa"] = 1
+        if k in di.keys():
+            exclusive.append(k)
+            di.pop(k)
         removal()
     if v[0] == 'Dwarven Cannon':
         have_items[k] = "cannon"
         have_items2["cannon"] = 1
+        if k in di.keys():
+            exclusive.append(k)
+            di.pop(k)
         removal()
     if v[0] == 'Briggs Jailbreak':
         have_items[k] = "briggs_jailbreak"
         have_items2["briggs_jailbreak"] = 1
+        if k in di.keys():
+            exclusive.append(k)
+            di.pop(k)
         removal()
     if v[0] == 'Jupiter Lighthouse Lit':
-        have_items[k] = "jupiter lit"
-        have_items2["jupiter lit"] = 1
-        
+        have_items[k] = "jupiter_lit"
+        have_items2["jupiter_lit"] = 1
+        if k in di.keys():
+            exclusive.append(k)
+            di.pop(k)
         removal()
     if v[0] == "Lighthouse Heated":
         have_items[k] = "mars_lit"
         have_items2["mars_lit"] = 1
+        if k in di.keys():
+            exclusive.append(k)
+            di.pop(k)
         removal()
     if v[0] == 'Reunion' and not found_reunion:
         found_reunion = True
         have_items[k] = "reunion"
         have_items2["reunion"] = 1
+        if k in di.keys():
+            exclusive.append("0x101")
+            exclusive.append("0x102")
+            exclusive.append("0x103")
+            exclusive.append("0x104")
+            exclusive.append(k)
+            di.pop(k)
         #reunion items
         have_items["0x101"] = loc_items["0x101"]
         have_items["0x102"] = loc_items["0x102"]
@@ -256,6 +297,7 @@ def special(v):
         add_djinn(loc_items["Squall"])
         
         removal()
+    return exclusive
 
 
 def sphere(sphere_counter, dd):
@@ -264,18 +306,28 @@ def sphere(sphere_counter, dd):
     global found_piers
     global found_reunion
     global have_djinn
+    global have_items
+    global have_items2
+    removal()
     get_djinn(di)
     removal()
     dic_sp = available_checks(di)
     sphere_dic = {}
-    for k,v in dic_sp.items():
-        temp = -1
-        while temp != len(have_items):
-            temp = len(have_items)
-            special(v)
+    exclusive = []
+    
+    temp = -1
+    while temp != len(have_items):
+        temp = len(have_items)
+        for k,v in dic_sp.items():
+            exclusive += special(v, k)
+        dic_sp = available_checks(di)
+
+    if len(exclusive) > 0:
+        get_djinn(di)
+        removal()
     dic_sp = available_checks(di)
     
-    exclusive = []
+    
 
     for k in dic_sp.keys():
         if k not in dd.keys() and (int(k, 16) < 48 or int(k, 16) >= 128):
@@ -302,6 +354,7 @@ def sphere(sphere_counter, dd):
                 ite = ite.replace(" (Mimic)", "")
                 have_items2[ite] = have_items2.get(ite, 0) + 1
                 print(ite)
+                di.pop(k)
         except:
             continue
 
@@ -411,12 +464,9 @@ def check_obj(obj, have_items, sphere_counter):
         print(done) #TODO replace with original bingo board
     return obj
 
-def add_djinn(dji):
+def add_djinn(dji, k=None):
     global djinn
     global have_djinn2
-    if dji in have_djinn2.keys():
-        print("AAAAA TOO MANY DJINN")
-        return
     have_djinn2[dji] = 1
     djinn["total"] += 1
     if dji in d_venus:
@@ -429,6 +479,7 @@ def add_djinn(dji):
         djinn["jupiter"] += 1
     else:
         print("WWWWWW ",dji)
+    
 
 
 recurse(data[0], [])
@@ -453,6 +504,9 @@ for k in di.keys():
             v2.append("reveal")
             v2.append("teleport")
             v2.remove("$canAccessUpperMars")
+        if "$canAccessShip" in v2:
+            v2.append("grind")
+            v2.remove("$canAccessShip")
         t_v.append(v2)
     di[k][1] = t_v
 di["0x001"] = ["trial_road", [["$hasDjinn|28", "shaman"]]]
@@ -464,16 +518,17 @@ di["0x006"] = ["Mad Plant", [["cyclone", "grind", "shaman", "hover", "lift"]]]
 di["0x007"] = ["Apple", [["grind", "catch"]]] 
 di["0x008"] = ["Cookie", [["grind", "magma ball"]]]
 di["0x009"] = ["Hard Nut", [["grind", "growth", "cyclone"],["trident", "growth", "cyclone"]]]
-di["0x010"] = ["Lucky Pepper", [["cyclone", "grind", "shaman", "hover", "lift"]]]
-di["0x011"] = ["Lucky Pepper", [["$hasDjinn|28", "shaman"]]]
-di["0x012"] = ["Mint", [["lash", "pound", "scoop", "cyclone"]]]
-di["0x013"] = ["Mint", [["cyclone"]]]
-di["0x014"] = ["Mint", [["cyclone", "grind"]]]#2 in jupiter
-di["0x015"] = ["Mint", [["cyclone", "grind"]]]
-di["0x016"] = ["Power Bread", [["pound", "lash", "burst"]]]
-di["0x017"] = ["Power Bread", [["grind"]]]
-di["0x018"] = ["Lucky Medal", [[]]]
+di["0x00A"] = ["Lucky Pepper", [["cyclone", "grind", "shaman", "hover", "lift"]]]
+di["0x00B"] = ["Lucky Pepper", [["$hasDjinn|28", "shaman"]]]
+di["0x00C"] = ["Mint", [["lash", "pound", "scoop", "cyclone"]]]
+di["0x00D"] = ["Mint", [["cyclone"]]]
+di["0x00E"] = ["Mint", [["cyclone", "grind"]]]#2 in jupiter
+di["0x00F"] = ["Mint", [["cyclone", "grind"]]]
+di["0x010"] = ["Power Bread", [["pound", "lash", "burst"]]]
+di["0x011"] = ["Power Bread", [["grind"]]]
+di["0x012"] = ["Lucky Medal", [[]]]
 di["0x9f9"] = ["Magma Ball", [["grind","lift","burst","growth","lash","whirlwind","blaze"]]]
+di.pop('0x8de') #lemurian ship
 
 log1 = spoiler_log.split('========== Djinn ==========')[1]
 log2 = log1.split('========== Character Stats ==========')
@@ -548,11 +603,12 @@ print("== available items ==")
 
 have_djinn = {}
 have_djinn2 = {}
+have_items = {}
+have_items2 = {}
+
 get_djinn(di)
 dic = available_checks(di)
 
-have_items = {}
-have_items2 = {}
 
 #idejima items
 have_items["0x1"] = loc_items["0x1"]
@@ -582,6 +638,8 @@ for k,v in have_items.items():
         ite = v.replace(" (mimic)", "")
         have_items2[ite] = have_items2.get(ite, 0) + 1
         print(v)
+        if k in di.keys():
+            di.pop(k)
 
 
 obj = check_obj(obj, have_items2, sphere_counter-1)           
@@ -610,10 +668,6 @@ while not same:
 
 print("=====DONE======")
 print(di)
-
-for (k,v) in have_djinn2.items():
-    if v > 1:
-        print(k, v)
 
 for row in obj:
     print(row)
