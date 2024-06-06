@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+import copy
 
 def replace_obj(obj):
     static_obj = {}
@@ -35,7 +36,7 @@ def replace_obj(obj):
     static_obj["Obtain the Corn"] = [["corn"]] #unicorn ring issues?
     static_obj["Obtain the Laughing or Healing Fungus"] = [["fungus"]] #plz work
     static_obj["Obtain the Mars Star"] = [["mars star"]]
-    static_obj["Defeat Briggs"] = [[]]
+    static_obj["Defeat Briggs"] = [["hasDjinn|6"]]
     static_obj["Defeat the Chest Beaters"] = [["whirlwind"]]
     static_obj["Defeat King Scorpion"] = [["pound"]]
     static_obj["Defeat Aqua Hydra"] = [["frost", "hasDjinn|10"]]
@@ -221,34 +222,30 @@ def credential(driver, url, password):
     
         
 def get_obj():
-    start_time = time.time()
-    print(datetime.now())
 
     url = simpledialog.askstring("Bingo", "url")
     password = simpledialog.askstring("Bingo", "password")
     driver = webdriver.Chrome(ChromeDriverManager().install())
 
     obj = credential(driver, url, password)
-    print(obj)
-    obj = replace_obj(obj)
+    obj2 = copy.deepcopy(obj)
+    obj2 = replace_obj(obj2)
 
     driver.close()
     driver.quit()
     
-    return obj
+    return [obj, obj2]
 
 def get_obj_fast(url, password):
-    start_time = time.time()
-    print(datetime.now())
 
     driver = webdriver.Chrome(ChromeDriverManager().install())
 
     obj = credential(driver, url, password)
-    print(obj)
-    obj = replace_obj(obj)
+    obj2 = copy.deepcopy(obj)
+    obj2 = replace_obj(obj2)
 
     driver.close()
     driver.quit()
     
-    return obj
+    return [obj, obj2]
 

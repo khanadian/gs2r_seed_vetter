@@ -2,7 +2,10 @@ import json
 from bingo import get_obj_fast
 from bingo import get_obj
 
-obj = get_obj_fast("https://bingosync.karanum.xyz/room/s-9cmekTQUm4EoMv6wnFpQ", "rust")
+obj = get_obj_fast("https://bingosync.karanum.xyz/room/1Pz8ptDST4ChcLwj8eA5JQ", "purpleshoes$")
+print(obj) 
+orig_obj = obj[0]
+obj = obj[1]
 
 f = open('locations.json', 'r')
 data = json.load(f)
@@ -308,6 +311,7 @@ def sphere(sphere_counter, dd):
     global have_djinn
     global have_items
     global have_items2
+    global statics
     removal()
     get_djinn(di)
     removal()
@@ -341,9 +345,9 @@ def sphere(sphere_counter, dd):
             if sphere_dic[k][0] in ["Piers", 'Briggs Fight', 'Serpent Defeated', 'Dwarven Cannon',\
                                     'Briggs Jailbreak','Jupiter Lighthouse Lit', 'Reunion', 'Lighthouse Heated']:
                 continue
-            if sphere_dic[k][0] in ["gabomba_statue", "trial_road", "Mad Plant", "Apple", "Cookie",\
-                                    "Hard Nut", "Lucky Pepper", "Mint", "Power Bread", "Lucky Medal"]:
+            if sphere_dic[k][0] in statics:
                 have_items[k] = sphere_dic[k][0]
+                exclusive.append(k)
                 continue
 
     for k in exclusive:
@@ -353,8 +357,8 @@ def sphere(sphere_counter, dd):
                 ite = ite.replace(" (empty)", "")
                 ite = ite.replace(" (Mimic)", "")
                 have_items2[ite] = have_items2.get(ite, 0) + 1
-                print(ite)
-                di.pop(k)
+                print(ite, k)
+            di.pop(k)
         except:
             continue
 
@@ -364,7 +368,7 @@ def sphere(sphere_counter, dd):
     return dic_sp
 
 def check_obj(obj, have_items, sphere_counter):
-    done_obj = []
+    global orig_obj
     for i in range(len(obj)):
         for j in range(len(obj[i])):
             #print(obj[i][j])
@@ -375,29 +379,29 @@ def check_obj(obj, have_items, sphere_counter):
             elif obj[i][j][0] == "djinn":
                 if obj[i][j][1][0] == "count":
                     if djinn[obj[i][j][1][2]] >= obj[i][j][1][1]:
-                        done_obj.append(obj[i][j])
+                        print(orig_obj[i][j])
                         obj[i][j] = sphere_counter
                 elif obj[i][j][1][0] == "specific":
                     for d in obj[i][j][1][1]:
                         for dj in have_djinn.values():
                             if d.lower() == dj.lower():
-                                done_obj.append(obj[i][j])
+                                print(orig_obj[i][j])
                                 obj[i][j] = sphere_counter
             elif obj[i][j][0] == "class":
                 for option in obj[i][j][1]:
                     if option[0] in have_classes and djinn[option[2]] >= option[1]:
                         if len(option) < 4:
-                            done_obj.append(obj[i][j])
+                            print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
                             break
                         elif djinn[option[4]] >= option[3]:
-                            done_obj.append(obj[i][j])
+                            print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
                             break
             elif obj[i][j][0] == "count":
                 if obj[i][j][1][1] in have_items2.keys():
                     if obj[i][j][1][0] <= have_items2[obj[i][j][1][1]]:
-                        done_obj.append(obj[i][j])
+                        print(orig_obj[i][j])
                         obj[i][j] = sphere_counter
                 else:
                     count = 0
@@ -406,62 +410,67 @@ def check_obj(obj, have_items, sphere_counter):
                             if "shirt" in item.lower() or item == "Divine Camisole":
                                 count += 1
                         if count >= 2:
-                            done_obj.append(obj[i][j])
+                            print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "ring":
                         for item in have_items2.keys():
                             if "ring" in item.lower():
                                 count += 1
                         if count >= 2:
-                            done_obj.append(obj[i][j])
+                            print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "stats":
                         count = have_items2.get("Apple", 0) + have_items2.get("Cookie", 0) +\
                                 have_items2.get("Hard Nut", 0) + have_items2.get("Lucky Pepper", 0) +\
                                 have_items2.get("Mint", 0) + have_items2.get("Power Bread", 0)
                         if count >= 5: #5 cuz -3 from statics off the bat
-                            done_obj.append(obj[i][j])
+                            print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "prong":
                         for item in have_items2.keys():
                             if "prong" in item.lower():
                                 count += 1
                         if count >= 2:
-                            done_obj.append(obj[i][j])
+                            print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "trade":
                         trad = ["Lil Turtle", "Pretty Stone", "Red Cloth", "Milk"]
                         count = sum(t in trad for t in have_items2.keys())
                         if count >= 2:
-                            done_obj.append(obj[i][j])
+                            print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "key":
                         for item in have_items2.keys():
                             if "key" in item.lower():
                                 count += 1
                         if count >= 2:
-                            done_obj.append(obj[i][j])
+                            print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
 
                         
             else:
                 for k in range(len(obj[i][j])):
+                    toRemove = []
                     #print(obj[i][j][k])
                     for l in obj[i][j][k]:
                         if "hasDjinn" in l:
                             if djinn["total"] >= int(l.split("|")[1]):
                                 obj[i][j][k].remove(l)
-                                continue
+                                if len(obj[i][j][k]) == 0:
+                                    break
                         for item in have_items.keys():
                             if l.lower() in item.lower():
-                                obj[i][j][k].remove(l)
+                                if l not in in_exceptions or item not in in_exceptions[l]:
+                                    toRemove.append(l)
+                    for item in toRemove:
+                        if len(obj[i][j][k]) == 0:
+                            break
+                        obj[i][j][k].remove(item)
+                        
                     if len(obj[i][j][k]) == 0:
-                        done_obj.append(obj[i][j])
+                        print(orig_obj[i][j])
                         obj[i][j] = sphere_counter
                         break
-
-    for done in done_obj:
-        print(done) #TODO replace with original bingo board
     return obj
 
 def add_djinn(dji, k=None):
@@ -527,7 +536,21 @@ di["0x00F"] = ["Mint", [["cyclone", "grind"]]]
 di["0x010"] = ["Power Bread", [["pound", "lash", "burst"]]]
 di["0x011"] = ["Power Bread", [["grind"]]]
 di["0x012"] = ["Lucky Medal", [[]]]
+di["0x013"] = ["Golem Core", [["grind", "scoop", "lift", "magma ball"]]]
+di["0x014"] = ["Vial", [["$hasDjinn|6"]]] #on briggs
+di["0x015"] = ["Lucky Medal", [["$hasDjinn|6"]]] #after briggs
+di["0x016"] = ["Vial", [["scoop"]]] #on king scorp
+di["0x017"] = ["Lucky Medal", [["grind, scoop"]]]
+di["0x018"] = ["Lucky Medal", [["grind"]]]
+di["0x019"] = ["Lucky Medal", [[]]] #champa
+di["0x01A"] = ["Mist Potion", [["grind", "magma ball"]]] #prox shop
+di["0x01B"] = ["Mithril Silver", [["grind", "scoop", "magma ball"]]]
+#care, 0x03 will be considered djinn
+statics = ["gabomba_statue", "trial_road", "Mad Plant", "Apple", "Cookie",\
+            "Hard Nut", "Lucky Pepper", "Mint", "Power Bread", "Lucky Medal"\
+           "Golem Core", "Vial", "Mist Potion", "Mithril Silver"]
 di["0x9f9"] = ["Magma Ball", [["grind","lift","burst","growth","lash","whirlwind","blaze"]]]
+
 di.pop('0x8de') #lemurian ship
 
 log1 = spoiler_log.split('========== Djinn ==========')[1]
@@ -627,8 +650,7 @@ for k in dic.keys():
         if dic[k][0] in ["Piers", 'Briggs Fight', 'Serpent Defeated', 'Dwarven Cannon',\
                                 'Briggs Jailbreak','Jupiter Lighthouse Lit', 'Reunion', 'Lighthouse Heated']:
             continue
-        if dic[k][0] in ["gabomba_statue", "trial_road", "Mad Plant", "Apple", "Cookie",\
-                                "Hard Nut", "Lucky Pepper", "Mint", "Power Bread", "Lucky Medal"]:
+        if dic[k][0] in statics:
             have_items[k] = dic[k][0]
             continue
 
@@ -637,28 +659,29 @@ for k,v in have_items.items():
         ite = v.replace(" (empty)", "")
         ite = v.replace(" (mimic)", "")
         have_items2[ite] = have_items2.get(ite, 0) + 1
-        print(v)
-        if k in di.keys():
-            di.pop(k)
+        print(v, k)
+    if k in di.keys():
+        di.pop(k)
 
-
-obj = check_obj(obj, have_items2, sphere_counter-1)           
-print(obj)
+print("\n=objectives completed=")
+obj = check_obj(obj, have_items2, sphere_counter-1)
+print("\n=djinn obtained=")
+for dj in have_djinn.values():
+    print(dj)
     
 ds = dic
 same = False
-print(have_djinn.values())
 djinn_old = list(have_djinn.values())
 while not same:
     ds1 = sphere(sphere_counter, ds)
     if ds1 == ds:
         same = True
     else:
-        sphere_counter +=1
+        sphere_counter +=1 #what if I move this down and remove the -1?
         ds = ds1
-        print("")
+        print("\n=objectives completed=")
         obj = check_obj(obj, have_items2, sphere_counter-1)
-        print("")
+        print("\n=djinn obtained=")
         for dj in have_djinn.values():
             if dj not in djinn_old:
                 print(dj)
@@ -668,7 +691,6 @@ while not same:
 
 print("=====DONE======")
 print(di)
-
 for row in obj:
     print(row)
 
