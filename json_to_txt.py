@@ -2,8 +2,17 @@ import json
 from bingo import get_obj_fast
 from bingo import get_obj
 
-obj = get_obj_fast("https://bingosync.karanum.xyz/room/1Pz8ptDST4ChcLwj8eA5JQ", "purpleshoes$")
-print(obj) 
+modes = ["pre-run", "post-run"]
+mode = modes[0]
+
+if mode == modes[0]:
+    foundGrind = False
+elif mode == modes[1]:
+    foundGrind = True
+
+obj = get_obj_fast("https://bingosync.karanum.xyz/room/sM6oC0f9RHesCxGxpkAY1w", "khan")
+if mode == modes[1]:
+    print(obj) 
 orig_obj = obj[0]
 obj = obj[1]
 
@@ -304,7 +313,8 @@ def special(v, k):
 
 
 def sphere(sphere_counter, dd):
-    print ("===== sphere ", sphere_counter)
+    if mode == modes[1]:
+        print ("===== sphere ", sphere_counter)
     global djinn
     global found_piers
     global found_reunion
@@ -357,7 +367,8 @@ def sphere(sphere_counter, dd):
                 ite = ite.replace(" (empty)", "")
                 ite = ite.replace(" (Mimic)", "")
                 have_items2[ite] = have_items2.get(ite, 0) + 1
-                print(ite, k)
+                if mode == modes[1]:
+                    print(ite, k)
             di.pop(k)
         except:
             continue
@@ -379,29 +390,34 @@ def check_obj(obj, have_items, sphere_counter):
             elif obj[i][j][0] == "djinn":
                 if obj[i][j][1][0] == "count":
                     if djinn[obj[i][j][1][2]] >= obj[i][j][1][1]:
-                        print(orig_obj[i][j])
+                        if mode == modes[1]:
+                            print(orig_obj[i][j])
                         obj[i][j] = sphere_counter
                 elif obj[i][j][1][0] == "specific":
                     for d in obj[i][j][1][1]:
                         for dj in have_djinn.values():
                             if d.lower() == dj.lower():
-                                print(orig_obj[i][j])
+                                if mode == modes[1]:
+                                    print(orig_obj[i][j])
                                 obj[i][j] = sphere_counter
             elif obj[i][j][0] == "class":
                 for option in obj[i][j][1]:
                     if option[0] in have_classes and djinn[option[2]] >= option[1]:
                         if len(option) < 4:
-                            print(orig_obj[i][j])
+                            if mode == modes[1]:
+                                print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
                             break
                         elif djinn[option[4]] >= option[3]:
-                            print(orig_obj[i][j])
+                            if mode == modes[1]:
+                                print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
                             break
             elif obj[i][j][0] == "count":
                 if obj[i][j][1][1] in have_items2.keys():
                     if obj[i][j][1][0] <= have_items2[obj[i][j][1][1]]:
-                        print(orig_obj[i][j])
+                        if mode == modes[1]:
+                            print(orig_obj[i][j])
                         obj[i][j] = sphere_counter
                 else:
                     count = 0
@@ -410,41 +426,47 @@ def check_obj(obj, have_items, sphere_counter):
                             if "shirt" in item.lower() or item == "Divine Camisole":
                                 count += 1
                         if count >= 2:
-                            print(orig_obj[i][j])
+                            if mode == modes[1]:
+                                print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "ring":
                         for item in have_items2.keys():
                             if "ring" in item.lower():
                                 count += 1
                         if count >= 2:
-                            print(orig_obj[i][j])
+                            if mode == modes[1]:
+                                print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "stats":
                         count = have_items2.get("Apple", 0) + have_items2.get("Cookie", 0) +\
                                 have_items2.get("Hard Nut", 0) + have_items2.get("Lucky Pepper", 0) +\
                                 have_items2.get("Mint", 0) + have_items2.get("Power Bread", 0)
                         if count >= 5: #5 cuz -3 from statics off the bat
-                            print(orig_obj[i][j])
+                            if mode == modes[1]:
+                                print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "prong":
                         for item in have_items2.keys():
                             if "prong" in item.lower():
                                 count += 1
                         if count >= 2:
-                            print(orig_obj[i][j])
+                            if mode == modes[1]:
+                                print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "trade":
                         trad = ["Lil Turtle", "Pretty Stone", "Red Cloth", "Milk"]
                         count = sum(t in trad for t in have_items2.keys())
                         if count >= 2:
-                            print(orig_obj[i][j])
+                            if mode == modes[1]:
+                                print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "key":
                         for item in have_items2.keys():
                             if "key" in item.lower():
                                 count += 1
                         if count >= 2:
-                            print(orig_obj[i][j])
+                            if mode == modes[1]:
+                                print(orig_obj[i][j])
                             obj[i][j] = sphere_counter
 
                         
@@ -463,12 +485,13 @@ def check_obj(obj, have_items, sphere_counter):
                                 if l not in in_exceptions or item not in in_exceptions[l]:
                                     toRemove.append(l)
                     for item in toRemove:
-                        if len(obj[i][j][k]) == 0:
+                        if len(obj[i][j][k]) == 0 or item not in obj[i][j][k]:
                             break
                         obj[i][j][k].remove(item)
                         
                     if len(obj[i][j][k]) == 0:
-                        print(orig_obj[i][j])
+                        if mode == modes[1]:
+                            print(orig_obj[i][j])
                         obj[i][j] = sphere_counter
                         break
     return obj
@@ -585,14 +608,14 @@ for line in log_items.split('\n'):
     item = line.split("--> ")[1]
     loc_items[addr]=item
 
-mode = 0
+moder = 0
 m_c = 0
 for line in log_djinn.split('\n'):
     if "reserve" in line.lower():
-        mode = 1
+        moder = 1
     if "-->" not in line:
         continue
-    if mode == 0:
+    if moder == 0:
         was = line.split(" --> ")[0].strip()
     else:
         if m_c == 0:
@@ -619,10 +642,12 @@ d_mars = "ForgeFeverCoronaScorchEmberFlashTorchCannonSparkKindleCharCoalRefluxCo
 d_mercury = "FizzSleetMistSpritzHailTonicDewFogSourSpringShadeChillSteamRimeGelEddyBalmSerac"
 d_jupiter = "GustBreezeZephyrSmogKiteSquallLuffBreathBlitzEtherWaftHazeWheezeAromaWhorlGaspLullGale"
 
-print ("===== sphere ", sphere_counter)
+if mode == modes[1]:
+    print ("===== sphere ", sphere_counter)
 sphere_counter +=1
 
-print("== available items ==")
+if mode == modes[1]:
+    print("== available items ==")
 
 have_djinn = {}
 have_djinn2 = {}
@@ -659,15 +684,24 @@ for k,v in have_items.items():
         ite = v.replace(" (empty)", "")
         ite = v.replace(" (mimic)", "")
         have_items2[ite] = have_items2.get(ite, 0) + 1
-        print(v, k)
+        if mode == modes[1]:
+            print(v, k)
     if k in di.keys():
         di.pop(k)
 
-print("\n=objectives completed=")
+if mode == modes[1]:
+    print("\n=objectives completed=")
 obj = check_obj(obj, have_items2, sphere_counter-1)
-print("\n=djinn obtained=")
-for dj in have_djinn.values():
-    print(dj)
+if mode == modes[1]:
+    print("\n=djinn obtained=")
+
+if mode == modes[1]:
+    for dj in have_djinn.values():
+        print(dj)
+
+if not foundGrind and "Grindstone" in have_items2.keys():
+    foundGrind = True
+    grindSphere = sphere_counter
     
 ds = dic
 same = False
@@ -679,20 +713,29 @@ while not same:
     else:
         sphere_counter +=1 #what if I move this down and remove the -1?
         ds = ds1
-        print("\n=objectives completed=")
+        if mode == modes[1]:
+            print("\n=objectives completed=")
         obj = check_obj(obj, have_items2, sphere_counter-1)
-        print("\n=djinn obtained=")
+        if mode == modes[1]:
+            print("\n=djinn obtained=")
         for dj in have_djinn.values():
             if dj not in djinn_old:
-                print(dj)
+                if mode == modes[1]:
+                    print(dj)
         djinn_old = list(have_djinn.values())
-        print(djinn["total"])
+        if mode == modes[1]:
+            print(djinn["total"])
+        if not foundGrind and "Grindstone" in have_items2.keys():
+            foundGrind = True
+            grindSphere = sphere_counter
         #find a way to print new djinn
 
 print("=====DONE======")
-print(di)
-for row in obj:
-    print(row)
+if mode == modes[1]:
+    print(di)
+if mode == modes[1]:
+    for row in obj:
+        print(row)
 
 sols = []
 sols.append([max(obj[0]), "row 1"])
@@ -719,10 +762,29 @@ for i in range(len(obj)):
 sols.append([max(temp), "top-right diagonal"])
 
 sols = sorted(sols, key=lambda x: x[0])
-print("")
-for sol in sols:
-    print(sol)
 
-print("\n fastest bingo is " + sols[0][1] + " with sphere " + str(sols[0][0]))
+minn = sols[0][0]
+minc = 0
+for soll in sols:
+    if soll[0] == minn:
+        minc += 1
+    elif soll[0] == minn+1:
+        minc += 0.5
+    else:
+        break
+
+if mode == modes[1]:
+    print("")
+    for sol in sols:
+        print(sol)
+    print("\n fastest bingo is " + sols[0][1] + " with sphere " + str(sols[0][0]))
+
+if mode == modes[0]:
+    #print(grindSphere, sphere_counter, minc, minn)
+    
+    aab1 = abs(0.5 - (grindSphere/sphere_counter))+1 #smaller better 1 to 1.5
+    aab2 = 1 + (minn/sphere_counter) #smaller better, 1 to 2
+    #change aab2 to 1 to allow longer runs
+    print("I give this a rating of ",round((4-(aab1*aab2))*minc,1)," out of 10")
 
 
