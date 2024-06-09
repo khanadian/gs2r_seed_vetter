@@ -1,16 +1,17 @@
 import json
 from bingo import get_obj_fast
 from bingo import get_obj
+import math
 
 modes = ["pre-run", "post-run"]
-mode = modes[0]
+mode = modes[1]
 
 if mode == modes[0]:
     foundGrind = False
 elif mode == modes[1]:
     foundGrind = True
 
-obj = get_obj_fast("https://bingosync.karanum.xyz/room/sM6oC0f9RHesCxGxpkAY1w", "khan")
+obj = get_obj_fast("https://bingosync.karanum.xyz/room/O44P4tjvR9C-ZYVUWA0FeQ", "Player")
 if mode == modes[1]:
     print(obj) 
 orig_obj = obj[0]
@@ -29,6 +30,11 @@ di = {}
 
 in_exceptions = {}
 in_exceptions["sand"] = ["Ninja Sandals"]
+in_exceptions["briggs_jailbreak"] = ["briggs_battle"]
+in_exceptions["Red Cloth"] = ["Red Key"]
+in_exceptions["Red Key"] = ["Red Cloth"]
+in_exceptions["Mars Star"] = ["mars_lit"]
+in_exceptions["mars_lit"] = ["Mars Star"]
 found_piers = False
 found_reunion = False
 def clean_access(lst):
@@ -142,11 +148,7 @@ def removal():
             for item in have_items2.keys():
                 for i in v:
                     frst = i.replace("_", " ").split()[0]
-                    if frst.lower() in item.lower(): 
-                        if frst == "red" or frst == "mars":
-                            if i.replace("_", " ").lower() != item.replace("_", " ").lower():
-                                continue
-                        
+                    if frst.lower() in item.lower():
                         if i not in in_exceptions or item not in in_exceptions[i]:
                             c = v.count(i)
                             for j in range(c):
@@ -575,7 +577,6 @@ statics = ["gabomba_statue", "trial_road", "Mad Plant", "Apple", "Cookie",\
 di["0x9f9"] = ["Magma Ball", [["grind","lift","burst","growth","lash","whirlwind","blaze"]]]
 
 di.pop('0x8de') #lemurian ship
-
 log1 = spoiler_log.split('========== Djinn ==========')[1]
 log2 = log1.split('========== Character Stats ==========')
 log_djinn = log2[0]
@@ -785,6 +786,8 @@ if mode == modes[0]:
     aab1 = abs(0.5 - (grindSphere/sphere_counter))+1 #smaller better 1 to 1.5
     aab2 = 1 + (minn/sphere_counter) #smaller better, 1 to 2
     #change aab2 to 1 to allow longer runs
-    print("I give this a rating of ",round((4-(aab1*aab2))*minc,1)," out of 10")
+    #print(aab1, aab2, math.sqrt(minc))
+    final_score = round(((4-(aab1*aab2))*2*math.sqrt(minc))-1, 1)
+    print("I give this a rating of ",final_score," out of 10")
 
 
