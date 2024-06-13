@@ -6,16 +6,21 @@ import math
 modes = ["pre-run", "post-run"]
 mode = modes[1]
 
+isolate_spoiler = False
+
 if mode == modes[0]:
     foundGrind = False
 elif mode == modes[1]:
     foundGrind = True
 
-obj = get_obj_fast("https://bingosync.karanum.xyz/room/O44P4tjvR9C-ZYVUWA0FeQ", "Player")
-if mode == modes[1]:
-    print(obj) 
-orig_obj = obj[0]
-obj = obj[1]
+if not isolate_spoiler:
+    url = "https://bingosync.karanum.xyz/room/ovHKB02eR5yTZCy22Yf6dw"
+    passw = "khan"
+    obj = get_obj_fast(url, passw)
+    if mode == modes[1]:
+        print(obj) 
+    orig_obj = obj[0]
+    obj = obj[1]
 
 f = open('locations.json', 'r')
 data = json.load(f)
@@ -330,7 +335,6 @@ def sphere(sphere_counter, dd):
     dic_sp = available_checks(di)
     sphere_dic = {}
     exclusive = []
-    
     temp = -1
     while temp != len(have_items):
         temp = len(have_items)
@@ -342,9 +346,18 @@ def sphere(sphere_counter, dd):
         get_djinn(di)
         removal()
     dic_sp = available_checks(di)
-    
-    
 
+    #idejima items
+    if sphere_counter == 0:
+        have_items["0x1"] = loc_items["0x1"]
+        have_items["0x2"] = loc_items["0x2"]
+        have_items["0x3"] = loc_items["0x3"]
+        have_items["0x4"] = loc_items["0x4"]
+        exclusive.append("0x1")
+        exclusive.append("0x2")
+        exclusive.append("0x3")
+        exclusive.append("0x4")
+        
     for k in dic_sp.keys():
         if k not in dd.keys() and (int(k, 16) < 48 or int(k, 16) >= 128):
             exclusive.append(k)
@@ -565,14 +578,14 @@ di["0x013"] = ["Golem Core", [["grind", "scoop", "lift", "magma ball"]]]
 di["0x014"] = ["Vial", [["$hasDjinn|6"]]] #on briggs
 di["0x015"] = ["Lucky Medal", [["$hasDjinn|6"]]] #after briggs
 di["0x016"] = ["Vial", [["scoop"]]] #on king scorp
-di["0x017"] = ["Lucky Medal", [["grind, scoop"]]]
+di["0x017"] = ["Lucky Medal", [["grind", "scoop"]]]
 di["0x018"] = ["Lucky Medal", [["grind"]]]
 di["0x019"] = ["Lucky Medal", [[]]] #champa
 di["0x01A"] = ["Mist Potion", [["grind", "magma ball"]]] #prox shop
 di["0x01B"] = ["Mithril Silver", [["grind", "scoop", "magma ball"]]]
 #care, 0x03 will be considered djinn
 statics = ["gabomba_statue", "trial_road", "Mad Plant", "Apple", "Cookie",\
-            "Hard Nut", "Lucky Pepper", "Mint", "Power Bread", "Lucky Medal"\
+            "Hard Nut", "Lucky Pepper", "Mint", "Power Bread", "Lucky Medal",\
            "Golem Core", "Vial", "Mist Potion", "Mithril Silver"]
 di["0x9f9"] = ["Magma Ball", [["grind","lift","burst","growth","lash","whirlwind","blaze"]]]
 
@@ -643,71 +656,16 @@ d_mars = "ForgeFeverCoronaScorchEmberFlashTorchCannonSparkKindleCharCoalRefluxCo
 d_mercury = "FizzSleetMistSpritzHailTonicDewFogSourSpringShadeChillSteamRimeGelEddyBalmSerac"
 d_jupiter = "GustBreezeZephyrSmogKiteSquallLuffBreathBlitzEtherWaftHazeWheezeAromaWhorlGaspLullGale"
 
-if mode == modes[1]:
-    print ("===== sphere ", sphere_counter)
-sphere_counter +=1
-
-if mode == modes[1]:
-    print("== available items ==")
-
 have_djinn = {}
 have_djinn2 = {}
 have_items = {}
 have_items2 = {}
 
-get_djinn(di)
-dic = available_checks(di)
-
-
-#idejima items
-have_items["0x1"] = loc_items["0x1"]
-have_items["0x2"] = loc_items["0x2"]
-have_items["0x3"] = loc_items["0x3"]
-have_items["0x4"] = loc_items["0x4"]
-
-
-
-for k in dic.keys():
-    if int(k, 16) >= 48 and int(k, 16) < 128:
-            continue
-    try:
-        have_items[k] = loc_items[k]
-    except:
-        if dic[k][0] in ["Piers", 'Briggs Fight', 'Serpent Defeated', 'Dwarven Cannon',\
-                                'Briggs Jailbreak','Jupiter Lighthouse Lit', 'Reunion', 'Lighthouse Heated']:
-            continue
-        if dic[k][0] in statics:
-            have_items[k] = dic[k][0]
-            continue
-
-for k,v in have_items.items():
-    if "coin" not in v:
-        ite = v.replace(" (empty)", "")
-        ite = v.replace(" (mimic)", "")
-        have_items2[ite] = have_items2.get(ite, 0) + 1
-        if mode == modes[1]:
-            print(v, k)
-    if k in di.keys():
-        di.pop(k)
-
-if mode == modes[1]:
-    print("\n=objectives completed=")
-obj = check_obj(obj, have_items2, sphere_counter-1)
-if mode == modes[1]:
-    print("\n=djinn obtained=")
-
-if mode == modes[1]:
-    for dj in have_djinn.values():
-        print(dj)
-
-if not foundGrind and "Grindstone" in have_items2.keys():
-    foundGrind = True
-    grindSphere = sphere_counter
-    
-ds = dic
+ds = {}
 same = False
 djinn_old = list(have_djinn.values())
 while not same:
+    
     ds1 = sphere(sphere_counter, ds)
     if ds1 == ds:
         same = True
@@ -716,7 +674,8 @@ while not same:
         ds = ds1
         if mode == modes[1]:
             print("\n=objectives completed=")
-        obj = check_obj(obj, have_items2, sphere_counter-1)
+        if not isolate_spoiler:
+            obj = check_obj(obj, have_items2, sphere_counter-1)
         if mode == modes[1]:
             print("\n=djinn obtained=")
         for dj in have_djinn.values():
@@ -729,65 +688,66 @@ while not same:
         if not foundGrind and "Grindstone" in have_items2.keys():
             foundGrind = True
             grindSphere = sphere_counter
-        #find a way to print new djinn
 
 print("=====DONE======")
-if mode == modes[1]:
-    print(di)
-if mode == modes[1]:
-    for row in obj:
-        print(row)
+#if mode == modes[1]:
+    #print(di)
 
-sols = []
-sols.append([max(obj[0]), "row 1"])
-sols.append([max(obj[1]), "row 2"])
-sols.append([max(obj[2]), "row 3"])
-sols.append([max(obj[3]), "row 4"])
-sols.append([max(obj[4]), "row 5"])
+if not isolate_spoiler:
+    if mode == modes[1]:
+        for row in obj:
+            print(row)
+            
+    sols = []
+    sols.append([max(obj[0]), "row 1"])
+    sols.append([max(obj[1]), "row 2"])
+    sols.append([max(obj[2]), "row 3"])
+    sols.append([max(obj[3]), "row 4"])
+    sols.append([max(obj[4]), "row 5"])
 
-sols.append([max([i[0] for i in obj]), "column 1"])
-sols.append([max([i[1] for i in obj]), "column 2"])
-sols.append([max([i[2] for i in obj]), "column 3"])
-sols.append([max([i[3] for i in obj]), "column 4"])
-sols.append([max([i[4] for i in obj]), "column 5"])
+    sols.append([max([i[0] for i in obj]), "column 1"])
+    sols.append([max([i[1] for i in obj]), "column 2"])
+    sols.append([max([i[2] for i in obj]), "column 3"])
+    sols.append([max([i[3] for i in obj]), "column 4"])
+    sols.append([max([i[4] for i in obj]), "column 5"])
 
 
-temp = []
-for i in range(len(obj)):
-    temp.append(obj[i][i])
-sols.append([max(temp), "top-left diagonal"])
+    temp = []
+    for i in range(len(obj)):
+        temp.append(obj[i][i])
+    sols.append([max(temp), "top-left diagonal"])
 
-temp = []
-for i in range(len(obj)):
-    temp.append(obj[i][4-i])
-sols.append([max(temp), "top-right diagonal"])
+    temp = []
+    for i in range(len(obj)):
+        temp.append(obj[i][4-i])
+    sols.append([max(temp), "top-right diagonal"])
 
-sols = sorted(sols, key=lambda x: x[0])
+    sols = sorted(sols, key=lambda x: x[0])
 
-minn = sols[0][0]
-minc = 0
-for soll in sols:
-    if soll[0] == minn:
-        minc += 1
-    elif soll[0] == minn+1:
-        minc += 0.5
-    else:
-        break
+    minn = sols[0][0]
+    minc = 0
+    for soll in sols:
+        if soll[0] == minn:
+            minc += 1
+        elif soll[0] == minn+1:
+            minc += 0.5
+        else:
+            break
 
-if mode == modes[1]:
-    print("")
-    for sol in sols:
-        print(sol)
-    print("\n fastest bingo is " + sols[0][1] + " with sphere " + str(sols[0][0]))
+    if mode == modes[1]:
+        print("")
+        for sol in sols:
+            print(sol)
+        print("\n fastest bingo is " + sols[0][1] + " with sphere " + str(sols[0][0]))
 
-if mode == modes[0]:
-    #print(grindSphere, sphere_counter, minc, minn)
-    
-    aab1 = abs(0.5 - (grindSphere/sphere_counter))+1 #smaller better 1 to 1.5
-    aab2 = 1 + (minn/sphere_counter) #smaller better, 1 to 2
-    #change aab2 to 1 to allow longer runs
-    #print(aab1, aab2, math.sqrt(minc))
-    final_score = round(((4-(aab1*aab2))*2*math.sqrt(minc))-1, 1)
-    print("I give this a rating of ",final_score," out of 10")
+    if mode == modes[0]:
+        #print(grindSphere, sphere_counter, minc, minn)
+        
+        aab1 = abs(0.5 - (grindSphere/sphere_counter))+1 #smaller better 1 to 1.5
+        aab2 = 1 + (minn/sphere_counter) #smaller better, 1 to 2
+        #change aab2 to 1 to allow longer runs
+        #print(aab1, aab2, math.sqrt(minc))
+        final_score = round(((4-(aab1*aab2))*2*math.sqrt(minc))-1, 1)
+        print("I give this a rating of ",final_score," out of 10")
 
 

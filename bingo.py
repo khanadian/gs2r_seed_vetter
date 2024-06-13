@@ -54,7 +54,7 @@ def replace_obj(obj):
     static_obj["Collect the chest in SW Atteka Islet"] = [["grind"]]
     static_obj["Collect the item in both Indra and Osenia Cavern"] = [["scoop", "lash"]]
     static_obj["Collect the Izumo summon tablet"] = [["parch", "pound", "sand", "reveal", "frost"]]
-    static_obj["Collect the Teleport Lapis chest"] = [["pound","burst","blaze"], ["pound","burst","teleport"]]
+    static_obj["Collect the Teleport Lapis chest"] = [["pound","burst","blaze", "grind"], ["pound","burst","teleport", "grind"]]
     static_obj["Collect the Angara Cavern summon tablet"] = [["grind", "carry"]]
     static_obj["Enter the boss room in Yampi Desert Cave"] = [["sand", "burst", "pound", "teleport"]]
     static_obj["Enter the boss room in Treasure Isle"] = [["grind", "lift"]]
