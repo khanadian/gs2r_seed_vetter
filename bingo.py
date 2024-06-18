@@ -111,7 +111,7 @@ def replace_obj(obj):
                                                     ["teleport", "reveal", "blaze", "burst", "pound", "magma ball", "grind"]]
     static_obj["Defeat each Sea Dragon-type enemy (3)"] = [["douse", "grind", "lift"]]
     static_obj["Reach the top of Tundaria Tower"] = [["parch", "pound", "reveal"]]
-    static_obj["Reach the top of Shrine of the Sea God"] = [["tear", "frost", "lash"]]
+    static_obj["Reach the top of Shrine of the Sea God"] = [["sea god", "frost", "lash"]]
     static_obj["Reach the top of Ankohl Ruins"] = [["whirlwind", "sand", "reveal"]]
     static_obj["Enter Aqua Rock's tablet room"] = [["douse", "frost", "aquarius"], ["douse", "parch", "aquarius"]]
     static_obj["Clear Gabomba Statue"] = [["lash", "pound", "scoop"]]

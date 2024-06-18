@@ -14,7 +14,7 @@ elif mode == modes[1]:
     foundGrind = True
 
 if not isolate_spoiler:
-    url = "https://bingosync.karanum.xyz/room/ovHKB02eR5yTZCy22Yf6dw"
+    url = "https://bingosync.karanum.xyz/room/40H4MLw7S_SUh2kyisDr8Q"
     passw = "khan"
     obj = get_obj_fast(url, passw)
     if mode == modes[1]:
@@ -582,11 +582,11 @@ di["0x017"] = ["Lucky Medal", [["grind", "scoop"]]]
 di["0x018"] = ["Lucky Medal", [["grind"]]]
 di["0x019"] = ["Lucky Medal", [[]]] #champa
 di["0x01A"] = ["Mist Potion", [["grind", "magma ball"]]] #prox shop
-di["0x01B"] = ["Mithril Silver", [["grind", "scoop", "magma ball"]]]
+di["0x01B"] = ["Mythril Silver", [["grind", "scoop", "magma ball"]]]
 #care, 0x03 will be considered djinn
 statics = ["gabomba_statue", "trial_road", "Mad Plant", "Apple", "Cookie",\
             "Hard Nut", "Lucky Pepper", "Mint", "Power Bread", "Lucky Medal",\
-           "Golem Core", "Vial", "Mist Potion", "Mithril Silver"]
+           "Golem Core", "Vial", "Mist Potion", "Mythril Silver"]
 di["0x9f9"] = ["Magma Ball", [["grind","lift","burst","growth","lash","whirlwind","blaze"]]]
 
 di.pop('0x8de') #lemurian ship
