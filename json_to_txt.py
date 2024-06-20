@@ -14,7 +14,7 @@ elif mode == modes[1]:
     foundGrind = True
 
 if not isolate_spoiler:
-    url = "https://bingosync.karanum.xyz/room/40H4MLw7S_SUh2kyisDr8Q"
+    url = "https://bingosync.karanum.xyz/room/CBfwmhv9QwG1meY5R671wQ"
     passw = "khan"
     obj = get_obj_fast(url, passw)
     if mode == modes[1]:
@@ -236,10 +236,8 @@ def special(v, k):
             exclusive.append(k)
             di.pop(k)
         removal()
-    if v[0] == 'Reunion' and not found_reunion:
+    if v[0] == 'Jupiter Lighthouse Lit' and not found_reunion:
         found_reunion = True
-        have_items[k] = "reunion"
-        have_items2["reunion"] = 1
         if k in di.keys():
             exclusive.append("0x101")
             exclusive.append("0x102")
@@ -416,6 +414,8 @@ def check_obj(obj, have_items, sphere_counter):
                                     print(orig_obj[i][j])
                                 obj[i][j] = sphere_counter
             elif obj[i][j][0] == "class":
+                if djinn["total"] < 10:
+                    continue
                 for option in obj[i][j][1]:
                     if option[0] in have_classes and djinn[option[2]] >= option[1]:
                         if len(option) < 4:
@@ -551,43 +551,44 @@ for k in di.keys():
             v2.append("reveal")
             v2.append("teleport")
             v2.remove("$canAccessUpperMars")
-        if "$canAccessShip" in v2:
+        if "$canAccessShip" in v2: #also add hover
             v2.append("grind")
             v2.remove("$canAccessShip")
         t_v.append(v2)
     di[k][1] = t_v
-di["0x001"] = ["trial_road", [["$hasDjinn|28", "shaman"]]]
+di["0x001"] = ["trial_road", [["$hasDjinn|28", "shaman", "grind"], ["$hasDjinn|28", "shaman", "hover"]]]
 di["0x002"] = ["Mad Plant", [["cyclone", "lash", "pound", "scoop", "frost", "reveal"]]]
 di["0x003"] = ["Mad Plant", [["cyclone", "whirlwind"]]]
 di["0x004"] = ["Mad Plant", [["cyclone", "dancing idol"]]]
-di["0x005"] = ["Mad Plant", [["cyclone", "grind"]]]
-di["0x006"] = ["Mad Plant", [["cyclone", "grind", "shaman", "hover", "lift"]]]
-di["0x007"] = ["Apple", [["grind", "catch"]]] 
-di["0x008"] = ["Cookie", [["grind", "magma ball"]]]
+di["0x005"] = ["Mad Plant", [["cyclone", "grind"], ["cyclone", "hover"]]]
+di["0x006"] = ["Mad Plant", [["cyclone", "shaman", "hover", "lift"]]]
+di["0x007"] = ["Apple", [["grind", "catch"], ["hover", "catch"]]] 
+di["0x008"] = ["Cookie", [["grind", "magma ball"], ["hover", "magma ball"]]]
 di["0x009"] = ["Hard Nut", [["grind", "growth", "cyclone"],["trident", "growth", "cyclone"]]]
-di["0x00A"] = ["Lucky Pepper", [["cyclone", "grind", "shaman", "hover", "lift"]]]
-di["0x00B"] = ["Lucky Pepper", [["$hasDjinn|28", "shaman"]]]
+di["0x00A"] = ["Lucky Pepper", [["cyclone", "shaman", "hover", "lift"]]]
+di["0x00B"] = ["Lucky Pepper", [["$hasDjinn|28", "shaman", "grind"], ["$hasDjinn|28", "shaman", "hover"]]]
 di["0x00C"] = ["Mint", [["lash", "pound", "scoop", "cyclone"]]]
 di["0x00D"] = ["Mint", [["cyclone"]]]
-di["0x00E"] = ["Mint", [["cyclone", "grind"]]]#2 in jupiter
-di["0x00F"] = ["Mint", [["cyclone", "grind"]]]
+di["0x00E"] = ["Mint", [["cyclone", "grind"],["cyclone", "hover"]]]#2 in jupiter
+di["0x00F"] = ["Mint", [["cyclone", "grind"],["cyclone", "hover"]]]
 di["0x010"] = ["Power Bread", [["pound", "lash", "burst"]]]
-di["0x011"] = ["Power Bread", [["grind"]]]
+di["0x011"] = ["Power Bread", [["grind"], ["hover"]]]
 di["0x012"] = ["Lucky Medal", [[]]]
-di["0x013"] = ["Golem Core", [["grind", "scoop", "lift", "magma ball"]]]
+di["0x013"] = ["Golem Core", [["grind", "scoop", "lift", "magma ball"],["hover", "scoop", "lift", "magma ball"]]]
 di["0x014"] = ["Vial", [["$hasDjinn|6"]]] #on briggs
 di["0x015"] = ["Lucky Medal", [["$hasDjinn|6"]]] #after briggs
 di["0x016"] = ["Vial", [["scoop"]]] #on king scorp
 di["0x017"] = ["Lucky Medal", [["grind", "scoop"]]]
 di["0x018"] = ["Lucky Medal", [["grind"]]]
 di["0x019"] = ["Lucky Medal", [[]]] #champa
-di["0x01A"] = ["Mist Potion", [["grind", "magma ball"]]] #prox shop
-di["0x01B"] = ["Mythril Silver", [["grind", "scoop", "magma ball"]]]
+di["0x01A"] = ["Mist Potion", [["grind", "magma ball"],["hover", "magma ball"]]] #prox shop
+di["0x01B"] = ["Mythril Silver", [["grind", "scoop", "magma ball"],["hover", "scoop", "magma ball"]]]
 #care, 0x03 will be considered djinn
 statics = ["gabomba_statue", "trial_road", "Mad Plant", "Apple", "Cookie",\
             "Hard Nut", "Lucky Pepper", "Mint", "Power Bread", "Lucky Medal",\
            "Golem Core", "Vial", "Mist Potion", "Mythril Silver"]
-di["0x9f9"] = ["Magma Ball", [["grind","lift","burst","growth","lash","whirlwind","blaze"]]]
+di["0x9f9"] = ["Magma Ball", [["grind","lift","burst","growth","lash","whirlwind","blaze"],\
+                              ["hover","lift","burst","growth","lash","whirlwind","blaze"]]]
 
 di.pop('0x8de') #lemurian ship
 log1 = spoiler_log.split('========== Djinn ==========')[1]
@@ -661,6 +662,9 @@ have_djinn2 = {}
 have_items = {}
 have_items2 = {}
 
+have_items["0x01C"] = "reunion"
+have_items2["reunion"] = 1
+
 ds = {}
 same = False
 djinn_old = list(have_djinn.values())
@@ -685,7 +689,8 @@ while not same:
         djinn_old = list(have_djinn.values())
         if mode == modes[1]:
             print(djinn["total"])
-        if not foundGrind and "Grindstone" in have_items2.keys():
+        if not foundGrind and ("Grindstone" in have_items2.keys() \
+           or "Hover Jade" in have_items2.keys()):
             foundGrind = True
             grindSphere = sphere_counter
 

@@ -12,12 +12,12 @@ import copy
 def replace_obj(obj):
     static_obj = {}
     static_obj["Unequip a cursed item"] = [[]]
-    static_obj["Talk to a hint NPC"] = [["whirlwind"], ["reveal"], ["pound", "lash", "scoop"], ["grind"]]
+    static_obj["Talk to a hint NPC"] = [["whirlwind"], ["reveal"], ["pound", "lash", "scoop"], ["grind"], ["hover"]]
     static_obj["Drain the underground lake in Mikasalla"] = [["scoop", "parch"]]
     static_obj["Use the Ruin Key"] = [["reveal", "ruin key"]]
     static_obj["Mind Read the cow in Lemuria"] = [["grind", "mind read", "growth"], ["trident", "mind read", "growth", "$hasDjinn|24"]]
-    static_obj["Use the cannon in Loho"] = [["magma ball", "grind"]]
-    static_obj["Fix a rusted weapon"] = [["rusty"]] #plz work
+    static_obj["Use the cannon in Loho"] = [["magma ball", "grind"],["magma ball", "hover"]]
+    static_obj["Fix a rusted weapon"] = [[]]
     static_obj["Forge with a Tear Stone"] = [["tear stone"]]
     static_obj["Forge with Dragon Skin"] = [["dragon skin"]]
     static_obj["Forge with a Salamander Tail"] = [["salamander tail"]]
@@ -43,19 +43,20 @@ def replace_obj(obj):
     static_obj["Defeat Serpent"] = [["dancing idol", "cyclone", "growth", "hasDjinn|24"], \
                                     ["dancing idol", "cyclone", "growth", "whirlwind", "hasDjinn|16"]]
     static_obj["Defeat Avimander"] = [["pound", "lash", "burst", "hasDjinn|20"]]
-    static_obj["Defeat Poseidon"] = [["grind", "hasDjinn|24"]]
+    static_obj["Defeat Poseidon"] = [["trident", "hasDjinn|24"]]
     static_obj["Defeat the Flame Dragons"] = [["teleport", "blaze", "magma ball", "pound", "burst", "grind","hasDjinn|48"]]
-    static_obj["Defeat Moapa and co."] = [["grind", "whirlwind", "shaman", "hasDjinn|28"]]
+    static_obj["Defeat Moapa and co."] = [["grind", "whirlwind", "shaman", "hasDjinn|28"],\
+                                          ["hover", "whirlwind", "shaman", "hasDjinn|28"]]
     static_obj["Collect the Tremor Bit chest"] = [["reveal"]]
     static_obj["Collect the Lemuria fountain item"] = [["grind"]]
     static_obj["Collect the item on the Dancing Idol pedestal"] = [["whirlwind", "reveal"]]
-    static_obj["Collect the chest in Gondowan Settlement"] = [["grind", "cyclone"]]
-    static_obj["Collect the chest in Hesperia Settlement"] = [["grind", "growth"]]
-    static_obj["Collect the chest in SW Atteka Islet"] = [["grind"]]
+    static_obj["Collect the chest in Gondowan Settlement"] = [["grind", "cyclone"], ["hover", "cyclone"]]
+    static_obj["Collect the chest in Hesperia Settlement"] = [["grind", "growth"],["hover", "growth"]]
+    static_obj["Collect the chest in SW Atteka Islet"] = [["grind"], ["hover"]]
     static_obj["Collect the item in both Indra and Osenia Cavern"] = [["scoop", "lash"]]
     static_obj["Collect the Izumo summon tablet"] = [["parch", "pound", "sand", "reveal", "frost"]]
     static_obj["Collect the Teleport Lapis chest"] = [["pound","burst","blaze", "grind"], ["pound","burst","teleport", "grind"]]
-    static_obj["Collect the Angara Cavern summon tablet"] = [["grind", "carry"]]
+    static_obj["Collect the Angara Cavern summon tablet"] = [["grind", "carry"], ["hover", "carry"]]
     static_obj["Enter the boss room in Yampi Desert Cave"] = [["sand", "burst", "pound", "teleport"]]
     static_obj["Enter the boss room in Treasure Isle"] = [["grind", "lift"]]
     static_obj["Enter the boss room in Islet Cave"] = [["mind read", "li'l", "teleport"]]
@@ -73,12 +74,12 @@ def replace_obj(obj):
     static_obj["Befriend the Djinni in Taopo Swamp"] = [["whirlwind"]]
     static_obj["Befriend the Djinni in Aqua Rock"] = [["douse", "parch"]]
     static_obj["Befriend the Djinni in Apojii Islands"] = [["sand", "whirlwind"]]
-    static_obj["Defeat all overworld Djinn (6)"] = [["grind"]]
-    static_obj["Befriend the Djinni in SW Atteka Islet"] = [["lift"]]
+    static_obj["Defeat all overworld Djinn (6)"] = [["grind"], ["hover"]]
+    static_obj["Befriend the Djinni in SW Atteka Islet"] = [["lift", "grind"], ["lift", "hover"]]
     static_obj["Befriend the Djinni in Gabomba Catacombs"] = [["pound", "lash", "scoop", "cyclone"]]
     static_obj["Befriend the Djinni in Lemuria"] = [["grind", "tremor", "cyclone"]]
-    static_obj["Befriend both Djinn in Contigo"] = [["grind", "scoop", "force"]]
-    static_obj["Befriend the Djinni in Trial Road"] = [["grind", "shaman", "whirlwind", "hover", "lift"]]
+    static_obj["Befriend both Djinn in Contigo"] = [["grind", "scoop", "force"],["hover", "scoop", "force"]]
+    static_obj["Befriend the Djinni in Trial Road"] = [["shaman", "whirlwind", "hover", "lift"]]
     static_obj["Befriend the Djinni in Yampi Desert Cave"] = [["scoop", "burst", "teleport", "sand"]]
     static_obj["Enter Air Rock's tablet room"] = [["whirlwind"]]
     static_obj["Collect the Air's Rock summon tablet"] = [["whirlwind"]]
@@ -99,16 +100,17 @@ def replace_obj(obj):
     static_obj["Obtain the Fujin Shield"] = [["fujin"]]
     static_obj["Obtain the Jester's Armlet"] = [["jester"]]
     static_obj["Obtain the Valkyrie Mail"] = [["valkyrie"]]
-    static_obj["Defeat each Doomsayer-type enemy (2)"] = [["lash", "scoop", "grind"]]
-    static_obj["Defeat each Assassin-type enemy (2)"] = [["grind"]]
+    static_obj["Defeat each Doomsayer-type enemy (2)"] = [["lash", "scoop", "grind"], ["lash", "scoop", "hover"]]
+    static_obj["Defeat each Assassin-type enemy (2)"] = [["grind"], ["hover"]]
     static_obj["Defeat each Merman-type enemy (3)"] = [["grind", "lift"]]
-    static_obj["Defeat a Phoenix-type enemy"] = [["grind"], ["li'l", "mind read", "teleport"]] 
-    static_obj["Defeat each Roc-type enemy (2)"] = [["grind", "magma ball"]]
+    static_obj["Defeat a Phoenix-type enemy"] = [["grind"], ["li'l", "mind read", "teleport"], ["hover"]] 
+    static_obj["Defeat each Roc-type enemy (2)"] = [["grind", "magma ball"], ["hover", "magma ball"]]
     static_obj["Defeat a Blue Dragon-type enemy"] = [["li'l", "mind read", "teleport"], \
-                                                     ["grind", "cyclone", "hover", "red key"], \
-                                                     ["grind", "cyclone", "hover", "blue key", "reveal"]]
+                                                     ["cyclone", "hover", "red key"], \
+                                                     ["cyclone", "hover", "blue key", "reveal"]]
     static_obj["Defeat an Aka Manah-type enemy"] = [["li'l", "mind read", "teleport"], \
-                                                    ["teleport", "reveal", "blaze", "burst", "pound", "magma ball", "grind"]]
+                                                    ["teleport", "reveal", "blaze", "burst", "pound", "magma ball", "grind"],\
+                                                    ["teleport", "reveal", "blaze", "burst", "pound", "magma ball", "hover"]]
     static_obj["Defeat each Sea Dragon-type enemy (3)"] = [["douse", "grind", "lift"]]
     static_obj["Reach the top of Tundaria Tower"] = [["parch", "pound", "reveal"]]
     static_obj["Reach the top of Shrine of the Sea God"] = [["sea god", "frost", "lash"]]
@@ -116,8 +118,8 @@ def replace_obj(obj):
     static_obj["Enter Aqua Rock's tablet room"] = [["douse", "frost", "aquarius"], ["douse", "parch", "aquarius"]]
     static_obj["Clear Gabomba Statue"] = [["lash", "pound", "scoop"]]
     static_obj["Enter the innermost room of Taopo Swamp"] = [["tremor", "douse", "frost", "whirlwind", "growth"]]
-    static_obj["Enter Magma Rock's tablet room"] = [["whirlwind", "growth", "burst", "lift", "grind"]]
-    static_obj["Clear Jupiter Lighthouse"] = [["blue key", "red key", "reveal", "pound", "hover", "cyclone", "grind"]]
+    static_obj["Enter Magma Rock's tablet room"] = [["whirlwind", "growth", "burst", "lift", "grind"], ["whirlwind", "growth", "burst", "lift", "hover"]]
+    static_obj["Clear Jupiter Lighthouse"] = [["blue key", "red key", "reveal", "pound", "hover", "cyclone"]]
     static_obj["Own 2 boots"] = [[]] #alhafra + garoh shops. code below just in case
     #[["turtle boots"], ["golden boots"], ["ninja sandals"], ["knight's greave"],\
                                   #["silver greave"], ["reveal"]]
@@ -248,4 +250,3 @@ def get_obj_fast(url, password):
     driver.quit()
     
     return [obj, obj2]
-
