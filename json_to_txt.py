@@ -2,9 +2,11 @@ import json
 from bingo import get_obj_fast
 from bingo import get_obj
 import math
+import copy
 
 modes = ["pre-run", "post-run"]
-mode = modes[1]
+mode = modes[0]
+bingo_possible = False
 
 isolate_spoiler = False
 
@@ -21,6 +23,8 @@ if not isolate_spoiler:
         print(obj) 
     orig_obj = obj[0]
     obj = obj[1]
+    obj_time = copy.deepcopy(obj)
+
 
 f = open('locations.json', 'r')
 data = json.load(f)
@@ -36,8 +40,8 @@ di = {}
 in_exceptions = {}
 in_exceptions["sand"] = ["Ninja Sandals"]
 in_exceptions["briggs_jailbreak"] = ["briggs_battle"]
-in_exceptions["Red Cloth"] = ["Red Key"]
-in_exceptions["Red Key"] = ["Red Cloth"]
+in_exceptions["red_cloth"] = ["Red Key"]
+in_exceptions["red_key"] = ["Red Cloth"]
 in_exceptions["Mars Star"] = ["mars_lit"]
 in_exceptions["mars_lit"] = ["Mars Star"]
 found_piers = False
@@ -393,6 +397,7 @@ def sphere(sphere_counter, dd):
 
 def check_obj(obj, have_items, sphere_counter):
     global orig_obj
+    global bingo_possible
     for i in range(len(obj)):
         for j in range(len(obj[i])):
             #print(obj[i][j])
@@ -405,6 +410,7 @@ def check_obj(obj, have_items, sphere_counter):
                     if djinn[obj[i][j][1][2]] >= obj[i][j][1][1]:
                         if mode == modes[1]:
                             print(orig_obj[i][j])
+                        bingo_possible = True
                         obj[i][j] = sphere_counter
                 elif obj[i][j][1][0] == "specific":
                     for d in obj[i][j][1][1]:
@@ -412,6 +418,7 @@ def check_obj(obj, have_items, sphere_counter):
                             if d.lower() == dj.lower():
                                 if mode == modes[1]:
                                     print(orig_obj[i][j])
+                                bingo_possible = True
                                 obj[i][j] = sphere_counter
             elif obj[i][j][0] == "class":
                 if djinn["total"] < 10:
@@ -421,11 +428,13 @@ def check_obj(obj, have_items, sphere_counter):
                         if len(option) < 4:
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
+                            bingo_possible = True
                             obj[i][j] = sphere_counter
                             break
                         elif djinn[option[4]] >= option[3]:
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
+                            bingo_possible = True
                             obj[i][j] = sphere_counter
                             break
             elif obj[i][j][0] == "count":
@@ -433,6 +442,7 @@ def check_obj(obj, have_items, sphere_counter):
                     if obj[i][j][1][0] <= have_items2[obj[i][j][1][1]]:
                         if mode == modes[1]:
                             print(orig_obj[i][j])
+                        bingo_possible = True
                         obj[i][j] = sphere_counter
                 else:
                     count = 0
@@ -443,6 +453,7 @@ def check_obj(obj, have_items, sphere_counter):
                         if count >= 2:
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
+                            bingo_possible = True
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "ring":
                         for item in have_items2.keys():
@@ -451,6 +462,7 @@ def check_obj(obj, have_items, sphere_counter):
                         if count >= 2:
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
+                            bingo_possible = True
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "stats":
                         count = have_items2.get("Apple", 0) + have_items2.get("Cookie", 0) +\
@@ -459,6 +471,7 @@ def check_obj(obj, have_items, sphere_counter):
                         if count >= 5: #5 cuz -3 from statics off the bat
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
+                            bingo_possible = True
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "prong":
                         for item in have_items2.keys():
@@ -467,6 +480,7 @@ def check_obj(obj, have_items, sphere_counter):
                         if count >= 2:
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
+                            bingo_possible = True
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "trade":
                         trad = ["Lil Turtle", "Pretty Stone", "Red Cloth", "Milk"]
@@ -474,6 +488,7 @@ def check_obj(obj, have_items, sphere_counter):
                         if count >= 2:
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
+                            bingo_possible = True
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "key":
                         for item in have_items2.keys():
@@ -482,6 +497,7 @@ def check_obj(obj, have_items, sphere_counter):
                         if count >= 2:
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
+                            bingo_possible = True
                             obj[i][j] = sphere_counter
 
                         
@@ -507,6 +523,7 @@ def check_obj(obj, have_items, sphere_counter):
                     if len(obj[i][j][k]) == 0:
                         if mode == modes[1]:
                             print(orig_obj[i][j])
+                        bingo_possible = True
                         obj[i][j] = sphere_counter
                         break
     return obj
@@ -544,7 +561,7 @@ for k in di.keys():
             v2.append("pound")
             v2.append("scoop")
             v2.remove("gabomba_statue")
-        if "$canAccessUpperMars" in v2:
+        if "$canAccessUpperMars" in v2: #mars star?
             v2.append("burst")
             v2.append("pound")
             v2.append("blaze")
@@ -589,8 +606,27 @@ statics = ["gabomba_statue", "trial_road", "Mad Plant", "Apple", "Cookie",\
            "Golem Core", "Vial", "Mist Potion", "Mythril Silver"]
 di["0x9f9"] = ["Magma Ball", [["grind","lift","burst","growth","lash","whirlwind","blaze"],\
                               ["hover","lift","burst","growth","lash","whirlwind","blaze"]]]
-
 di.pop('0x8de') #lemurian ship
+
+boss_dic = {}
+boss_dic['0x94d'] = di.pop('0x94d') #moapa
+boss_dic['0x9ba'] = di.pop('0x9ba') #serpent
+boss_dic['0x978'] = di.pop('0x978') #avimander
+boss_dic['0xa3a'] = di.pop('0xa3a') #flame dragons
+boss_dic['0xa4b'] = di.pop('0xa4b') #mars lit
+boss_dic['0x918'] = di.pop('0x918') #mayor's gift
+boss_dic['0xf93'] = di.pop('0xf93') #tomegathericon
+boss_dic['0xf65'] = di.pop('0xf65') #deep taopo
+boss_dic['0xf75'] = di.pop('0xf75') #gaia whirlwind check
+boss_dic['0x19'] = di.pop('0x19') #star magician
+boss_dic['0x18'] = di.pop('0x18') #valukar
+boss_dic['0x1a'] = di.pop('0x1a') #sentinel
+
+
+
+
+di2 = copy.deepcopy(di)
+
 log1 = spoiler_log.split('========== Djinn ==========')[1]
 log2 = log1.split('========== Character Stats ==========')
 log_djinn = log2[0]
@@ -669,7 +705,6 @@ ds = {}
 same = False
 djinn_old = list(have_djinn.values())
 while not same:
-    
     ds1 = sphere(sphere_counter, ds)
     if ds1 == ds:
         same = True
@@ -693,6 +728,10 @@ while not same:
            or "Hover Jade" in have_items2.keys()):
             foundGrind = True
             grindSphere = sphere_counter
+
+    if bingo_possible:
+        for k in boss_dic.keys():
+            di[k] = boss_dic[k]
 
 print("=====DONE======")
 #if mode == modes[1]:
@@ -750,9 +789,63 @@ if not isolate_spoiler:
         
         aab1 = abs(0.5 - (grindSphere/sphere_counter))+1 #smaller better 1 to 1.5
         aab2 = 1 + (minn/sphere_counter) #smaller better, 1 to 2
+        mincc = 0
+        if minc > 4: #too many bingos in lowest sphere is detrimental
+            mincc = minc-4
+        aab3 = minc - mincc
         #change aab2 to 1 to allow longer runs
         #print(aab1, aab2, math.sqrt(minc))
-        final_score = round(((4-(aab1*aab2))*2*math.sqrt(minc))-1, 1)
+        final_score = round(((4-(aab1*aab2))*2*math.sqrt(aab3))-1, 1)
         print("I give this a rating of ",final_score," out of 10")
+
+#time estimates
+##for row in range(len(obj_time)):
+##    for col in range(len(obj_time[row])):
+##        ob = obj_time[row][col]
+##        if ob[0] in ["count", "djinn", "class"]:
+##            continue
+##        for method in range(len(ob)):
+##            for req in range(len(ob[method])):
+##                indiv = ob[method][req]
+##                if indiv == "0x":
+##                    continue
+##                for k, v in have_items.items():
+##                    if indiv.lower() in v.lower():
+##                        if indiv.lower() not in in_exceptions or v not in in_exceptions[indiv]:
+##                            obj_time[row][col][method][req] = k
+##                            break     
+###obj_time
+##
+##first_bingo = sols[0][0]
+##req_items = []
+##req_addrs = []
+##
+##for sol in sols:
+##    if sol[0] != first_bingo:
+##        break
+##    if sol[1][0] == "r":
+##        line = obj_time[int(sol[1].split(" ")[1])-1]
+##    elif sol[1][0] == 'c':
+##        num = int(sol[1].split(" ")[1])-1
+##        line = [i[num] for i in obj_time]
+##    elif sol[1][4] == 'l':
+##        line = []
+##        for i in range(len(obj_time)):
+##            line.append(obj_time[i][i])
+##    elif sol[1][4] == 'r':
+##        line = []
+##        for i in range(len(obj_time)):
+##            line.append(obj_time[i][4-i])
+##    print(line, "\n")
+##
+##    for obj in line:
+##        if obj[0] in ["count", "djinn", "class"]:
+##            continue
+##        #TODO should i find time for all paths, or fastest?
+        
+        
+
+
+
 
 
