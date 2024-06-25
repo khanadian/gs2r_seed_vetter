@@ -338,7 +338,7 @@ def sphere(sphere_counter, dd):
     sphere_dic = {}
     exclusive = []
     temp = -1
-    while temp != len(have_items):
+    while temp != len(have_items): #TODO change to a repeat flag
         temp = len(have_items)
         for k,v in dic_sp.items():
             exclusive += special(v, k)
@@ -410,7 +410,6 @@ def check_obj(obj, have_items, sphere_counter):
                     if djinn[obj[i][j][1][2]] >= obj[i][j][1][1]:
                         if mode == modes[1]:
                             print(orig_obj[i][j])
-                        bingo_possible = True
                         obj[i][j] = sphere_counter
                 elif obj[i][j][1][0] == "specific":
                     for d in obj[i][j][1][1]:
@@ -418,7 +417,6 @@ def check_obj(obj, have_items, sphere_counter):
                             if d.lower() == dj.lower():
                                 if mode == modes[1]:
                                     print(orig_obj[i][j])
-                                bingo_possible = True
                                 obj[i][j] = sphere_counter
             elif obj[i][j][0] == "class":
                 if djinn["total"] < 10:
@@ -428,13 +426,11 @@ def check_obj(obj, have_items, sphere_counter):
                         if len(option) < 4:
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
-                            bingo_possible = True
                             obj[i][j] = sphere_counter
                             break
                         elif djinn[option[4]] >= option[3]:
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
-                            bingo_possible = True
                             obj[i][j] = sphere_counter
                             break
             elif obj[i][j][0] == "count":
@@ -442,7 +438,6 @@ def check_obj(obj, have_items, sphere_counter):
                     if obj[i][j][1][0] <= have_items2[obj[i][j][1][1]]:
                         if mode == modes[1]:
                             print(orig_obj[i][j])
-                        bingo_possible = True
                         obj[i][j] = sphere_counter
                 else:
                     count = 0
@@ -453,7 +448,6 @@ def check_obj(obj, have_items, sphere_counter):
                         if count >= 2:
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
-                            bingo_possible = True
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "ring":
                         for item in have_items2.keys():
@@ -462,7 +456,6 @@ def check_obj(obj, have_items, sphere_counter):
                         if count >= 2:
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
-                            bingo_possible = True
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "stats":
                         count = have_items2.get("Apple", 0) + have_items2.get("Cookie", 0) +\
@@ -471,7 +464,6 @@ def check_obj(obj, have_items, sphere_counter):
                         if count >= 5: #5 cuz -3 from statics off the bat
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
-                            bingo_possible = True
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "prong":
                         for item in have_items2.keys():
@@ -480,7 +472,6 @@ def check_obj(obj, have_items, sphere_counter):
                         if count >= 2:
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
-                            bingo_possible = True
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "trade":
                         trad = ["Lil Turtle", "Pretty Stone", "Red Cloth", "Milk"]
@@ -488,7 +479,6 @@ def check_obj(obj, have_items, sphere_counter):
                         if count >= 2:
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
-                            bingo_possible = True
                             obj[i][j] = sphere_counter
                     elif obj[i][j][1][1] == "key":
                         for item in have_items2.keys():
@@ -497,7 +487,6 @@ def check_obj(obj, have_items, sphere_counter):
                         if count >= 2:
                             if mode == modes[1]:
                                 print(orig_obj[i][j])
-                            bingo_possible = True
                             obj[i][j] = sphere_counter
 
                         
@@ -523,9 +512,38 @@ def check_obj(obj, have_items, sphere_counter):
                     if len(obj[i][j][k]) == 0:
                         if mode == modes[1]:
                             print(orig_obj[i][j])
-                        bingo_possible = True
                         obj[i][j] = sphere_counter
                         break
+                    
+    if not bingo_possible:
+        #rows
+        for row in range(len(obj)):
+            for col in range(len(obj[row])):
+                if not isinstance(obj[row][col], int):
+                    break
+                if col == 4:
+                    bingo_possible = True
+
+        #columns
+        for col in range(len(obj)):
+            for row in range(len(obj[row])):
+                if not isinstance(obj[row][col], int):
+                    break
+                if row == 4:
+                    bingo_possible = True
+
+        for diag1 in range(len(obj)):
+            if not isinstance(obj[diag1][diag1], int):
+                    break
+            if diag1 == 4:
+                bingo_possible = True
+
+        for diag2 in range(len(obj)):
+            if not isinstance(obj[diag2][4-diag2], int):
+                    break
+            if diag2 == 4:
+                bingo_possible = True
+
     return obj
 
 def add_djinn(dji, k=None):
@@ -614,16 +632,13 @@ boss_dic['0x9ba'] = di.pop('0x9ba') #serpent
 boss_dic['0x978'] = di.pop('0x978') #avimander
 boss_dic['0xa3a'] = di.pop('0xa3a') #flame dragons
 boss_dic['0xa4b'] = di.pop('0xa4b') #mars lit
-boss_dic['0x918'] = di.pop('0x918') #mayor's gift
 boss_dic['0xf93'] = di.pop('0xf93') #tomegathericon
-boss_dic['0xf65'] = di.pop('0xf65') #deep taopo
-boss_dic['0xf75'] = di.pop('0xf75') #gaia whirlwind check
 boss_dic['0x19'] = di.pop('0x19') #star magician
 boss_dic['0x18'] = di.pop('0x18') #valukar
 boss_dic['0x1a'] = di.pop('0x1a') #sentinel
-
-
-
+boss_dic['0x918'] = di.pop('0x918') #mayor's gift
+boss_dic['0xf65'] = di.pop('0xf65') #deep taopo
+boss_dic['0xf75'] = di.pop('0xf75') #gaia whirlwind check
 
 di2 = copy.deepcopy(di)
 
@@ -704,6 +719,7 @@ have_items2["reunion"] = 1
 ds = {}
 same = False
 djinn_old = list(have_djinn.values())
+bingo_p2 = True
 while not same:
     ds1 = sphere(sphere_counter, ds)
     if ds1 == ds:
@@ -729,7 +745,8 @@ while not same:
             foundGrind = True
             grindSphere = sphere_counter
 
-    if bingo_possible:
+    if bingo_possible and bingo_p2:
+        bingo_p2 = False
         for k in boss_dic.keys():
             di[k] = boss_dic[k]
 
@@ -796,7 +813,11 @@ if not isolate_spoiler:
         #change aab2 to 1 to allow longer runs
         #print(aab1, aab2, math.sqrt(minc))
         final_score = round(((4-(aab1*aab2))*2*math.sqrt(aab3))-1, 1)
-        print("I give this a rating of ",final_score," out of 10")
+        #print("I give this a rating of ",final_score," out of 10")
+        if aab3 > 3:
+            print("good enough bro")
+        else:
+            print("not good enough homeslice")
 
 #time estimates
 ##for row in range(len(obj_time)):
