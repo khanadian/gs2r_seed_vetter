@@ -5,7 +5,7 @@ import math
 import copy
 
 modes = ["pre-run", "post-run"]
-mode = modes[0]
+mode = modes[1]
 bingo_possible = False
 
 isolate_spoiler = False
@@ -16,8 +16,8 @@ elif mode == modes[1]:
     foundGrind = True
 
 if not isolate_spoiler:
-    url = "https://bingosync.karanum.xyz/room/CBfwmhv9QwG1meY5R671wQ"
-    passw = "khan"
+    url = "https://bingosync.karanum.xyz/room/okADtJS0S26WtF20zT1-AA"
+    passw = "musical"
     obj = get_obj_fast(url, passw)
     if mode == modes[1]:
         print(obj) 
@@ -626,19 +626,20 @@ di["0x9f9"] = ["Magma Ball", [["grind","lift","burst","growth","lash","whirlwind
                               ["hover","lift","burst","growth","lash","whirlwind","blaze"]]]
 di.pop('0x8de') #lemurian ship
 
-boss_dic = {}
-boss_dic['0x94d'] = di.pop('0x94d') #moapa
-boss_dic['0x9ba'] = di.pop('0x9ba') #serpent
-boss_dic['0x978'] = di.pop('0x978') #avimander
-boss_dic['0xa3a'] = di.pop('0xa3a') #flame dragons
-boss_dic['0xa4b'] = di.pop('0xa4b') #mars lit
-boss_dic['0xf93'] = di.pop('0xf93') #tomegathericon
-boss_dic['0x19'] = di.pop('0x19') #star magician
-boss_dic['0x18'] = di.pop('0x18') #valukar
-boss_dic['0x1a'] = di.pop('0x1a') #sentinel
-boss_dic['0x918'] = di.pop('0x918') #mayor's gift
-boss_dic['0xf65'] = di.pop('0xf65') #deep taopo
-boss_dic['0xf75'] = di.pop('0xf75') #gaia whirlwind check
+if mode == modes[0]:
+    boss_dic = {}
+    boss_dic['0x94d'] = di.pop('0x94d') #moapa
+    boss_dic['0x9ba'] = di.pop('0x9ba') #serpent
+    boss_dic['0x978'] = di.pop('0x978') #avimander
+    boss_dic['0xa3a'] = di.pop('0xa3a') #flame dragons
+    boss_dic['0xa4b'] = di.pop('0xa4b') #mars lit
+    boss_dic['0xf93'] = di.pop('0xf93') #tomegathericon
+    boss_dic['0x19'] = di.pop('0x19') #star magician
+    boss_dic['0x18'] = di.pop('0x18') #valukar
+    boss_dic['0x1a'] = di.pop('0x1a') #sentinel
+    boss_dic['0x918'] = di.pop('0x918') #mayor's gift
+    boss_dic['0xf65'] = di.pop('0xf65') #deep taopo
+    boss_dic['0xf75'] = di.pop('0xf75') #gaia whirlwind check
 
 di2 = copy.deepcopy(di)
 
@@ -747,8 +748,9 @@ while not same:
 
     if bingo_possible and bingo_p2:
         bingo_p2 = False
-        for k in boss_dic.keys():
-            di[k] = boss_dic[k]
+        if mode == modes[0]:
+            for k in boss_dic.keys():
+                di[k] = boss_dic[k]
 
 print("=====DONE======")
 #if mode == modes[1]:
