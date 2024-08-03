@@ -5,7 +5,7 @@ import math
 import copy
 
 modes = ["pre-run", "post-run"]
-mode = modes[1]
+mode = modes[0]
 bingo_possible = False
 
 isolate_spoiler = False
@@ -16,9 +16,10 @@ elif mode == modes[1]:
     foundGrind = True
 
 if not isolate_spoiler:
-    url = "https://bingosync.karanum.xyz/room/okADtJS0S26WtF20zT1-AA"
-    passw = "musical"
+    url = "https://bingosync.karanum.xyz/room/CBfwmhv9QwG1meY5R671wQ"
+    passw = "khan"
     obj = get_obj_fast(url, passw)
+    #obj = get_obj()
     if mode == modes[1]:
         print(obj) 
     orig_obj = obj[0]

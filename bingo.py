@@ -8,6 +8,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 import copy
+import chromedriver_autoinstaller
+
+chromedriver_autoinstaller.install()
 
 def replace_obj(obj):
     static_obj = {}
@@ -113,7 +116,7 @@ def replace_obj(obj):
                                                     ["teleport", "reveal", "blaze", "burst", "pound", "magma ball", "hover"]]
     static_obj["Defeat each Sea Dragon-type enemy (3)"] = [["douse", "grind", "lift"]]
     static_obj["Reach the top of Tundaria Tower"] = [["parch", "pound", "reveal"]]
-    static_obj["Reach the top of Shrine of the Sea God"] = [["sea god", "frost", "lash"]]
+    static_obj["Reach the top of Shrine of the Sea God"] = [["sea god", "frost", "lash", "reveal"]]
     static_obj["Reach the top of Ankohl Ruins"] = [["whirlwind", "sand", "reveal"]]
     static_obj["Enter Aqua Rock's tablet room"] = [["douse", "frost", "aquarius"], ["douse", "parch", "aquarius"]]
     static_obj["Clear Gabomba Statue"] = [["lash", "pound", "scoop"]]
@@ -227,7 +230,7 @@ def get_obj():
 
     url = simpledialog.askstring("Bingo", "url")
     password = simpledialog.askstring("Bingo", "password")
-    driver = webdriver.Chrome(ChromeDriverManager().install())
+    driver = webdriver.Chrome()
 
     obj = credential(driver, url, password)
     obj2 = copy.deepcopy(obj)
@@ -240,7 +243,7 @@ def get_obj():
 
 def get_obj_fast(url, password):
 
-    driver = webdriver.Chrome(ChromeDriverManager().install())
+    driver = webdriver.Chrome()
 
     obj = credential(driver, url, password)
     obj2 = copy.deepcopy(obj)
